@@ -1,13 +1,14 @@
 <script setup lang="ts">
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { ShoppingCart } from "lucide-vue-next";
+import ShoppingCartItem from "@/components/cart/ShoppingCartItem.vue";
 import { useCart } from "@/composables/cart";
 import { computed } from "vue";
 
-const { total, cart } = useCart();
+const { total, cart, updateItemQuantity, removeFromCart } = useCart();
 
 const formatter = new Intl.NumberFormat("en-SG", {
 	style: "currency",
@@ -20,6 +21,14 @@ const formattedTotal = computed(() => formatter.format(total.value));
 const cartArray = computed(() => {
 	return Array.from(cart.value.values());
 });
+
+function onQuantityChange(itemId: string, quantity: number) {
+	if (quantity <= 0) {
+		removeFromCart(itemId);
+	} else {
+		updateItemQuantity(itemId, quantity);
+	}
+}
 </script>
 <template>
 	<div class="flex grow flex-col gap-4">
@@ -38,15 +47,15 @@ const cartArray = computed(() => {
 			</CardHeader>
 			<CardContent class="flex grow">
 				<ScrollArea class="h-100 w-full">
-					<Card class="flex flex-row justify-between" v-for="item in cartArray" :key="item.id">
-						<CardHeader class="w-1/3 text-left">
-							<CardTitle class="text-lg font-bold"> {{ item.name }} </CardTitle>
-							<CardDescription class="text-sm text-gray-500">
-								{{ formatter.format(item.price) }} each
-							</CardDescription>
-						</CardHeader>
-						<CardContent> sadada </CardContent>
-					</Card>
+					<div class="flex flex-col gap-1">
+						<ShoppingCartItem
+							v-for="item in cartArray"
+							:key="item.id"
+							:item="item"
+							:formatter="formatter"
+							@update-quantity="onQuantityChange"
+						/>
+					</div>
 				</ScrollArea>
 			</CardContent>
 		</Card>

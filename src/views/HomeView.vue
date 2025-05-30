@@ -2,7 +2,7 @@
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Search, Package, History, Trash2 } from "lucide-vue-next";
-import ShoppingCart from "@/components/ShoppingCart.vue";
+import ShoppingCart from "@/components/cart/ShoppingCart.vue";
 </script>
 
 <template>

@@ -17,6 +17,13 @@ function useCart() {
 		calculateTotal();
 	}
 
+	function updateItemQuantity(itemId: string, quantity: number) {
+		const existingItem = cart.value.get(itemId);
+		if (existingItem) {
+			existingItem.quantity = quantity;
+		}
+	}
+
 	function removeFromCart(itemId: string) {
 		cart.value.delete(itemId);
 		calculateTotal();
@@ -33,6 +40,7 @@ function useCart() {
 		isScanning,
 		addToCart,
 		removeFromCart,
+		updateItemQuantity,
 	};
 }
 
