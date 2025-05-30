@@ -8,7 +8,7 @@ import ShoppingCart from "@/components/ShoppingCart.vue";
 <template>
 	<main class="flex min-h-screen gap-4 justify-center p-6 text-center">
 		<ShoppingCart />
-		<Card class="h-fit">
+		<Card class="h-fit w-1/4">
 			<CardHeader>
 				<CardTitle class="text-2xl font-bold"> Quick Actions </CardTitle>
 			</CardHeader>
