@@ -7,7 +7,7 @@ import ClearCartAction from "@/components/actions/ClearCartAction.vue";
 import DateTimeDisplay from "@/components/DateTimeDisplay.vue";
 import { useCart } from "@/composables/cart";
 
-const { selectedItemId } = useCart();
+const { addOpenItemToCart, selectedItemId } = useCart();
 </script>
 
 <template>
@@ -22,7 +22,11 @@ const { selectedItemId } = useCart();
 					<Search class="w-5 h-5 mr-2" />
 					Search Items
 				</Button>
-				<Button variant="outline" class="w-full h-12 text-left justify-start text-base">
+				<Button
+					variant="outline"
+					class="w-full h-12 text-left justify-start text-base"
+					@click="addOpenItemToCart"
+				>
 					<Package class="w-5 h-5 mr-2" />
 					Add Open Item
 				</Button>

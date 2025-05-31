@@ -18,6 +18,17 @@ function useCart() {
 		calculateTotal();
 	}
 
+	function addOpenItemToCart() {
+		const openItem: CartItem = {
+			id: `open-${Date.now()}`,
+			name: "OPEN ITEM",
+			price: 0,
+			quantity: 1,
+		};
+		addToCart(openItem);
+		selectItem(openItem.id);
+	}
+
 	function updateItemQuantity(itemId: string, quantity: number) {
 		const existingItem = cart.value.get(itemId);
 		if (existingItem) {
@@ -51,6 +62,7 @@ function useCart() {
 		isScanning,
 		selectedItemId,
 		addToCart,
+		addOpenItemToCart,
 		removeFromCart,
 		clearCart,
 		updateItemQuantity,
