@@ -1,85 +1,39 @@
 <script setup lang="ts">
-import { RouterLink, RouterView } from "vue-router";
-import HelloWorld from "./components/HelloWorld.vue";
+import { RouterView } from "vue-router";
+import { onKeyStroke } from "@vueuse/core";
+import { useItemQueries } from "@/composables/queries/item";
+import { useCart } from "@/composables/cart";
+import { ref } from "vue";
+
+const { getAllItems } = useItemQueries();
+const { isScanning, addToCart } = useCart();
+const { data: items, isLoading, error } = getAllItems();
+
+const scannedArray = ref<string[]>([]);
+
+onKeyStroke((e) => {
+	e.preventDefault();
+	if (!isScanning.value) return;
+	if (!items.value) return;
+
+	switch (e.key) {
+		case "Enter": {
+			const itemBarcode = scannedArray.value.join("");
+			console.log("Scanned Barcode:", itemBarcode);
+			const foundItem = items.value.find((item) => item.id === itemBarcode);
+			console.log("Found Item:", foundItem);
+			if (foundItem) addToCart(foundItem);
+			scannedArray.value = [];
+			break;
+		}
+		default:
+			scannedArray.value.push(e.key);
+	}
+});
 </script>
 
 <template>
-	<header>
-		<img alt="Vue logo" class="logo" src="@/assets/logo.svg" width="125" height="125" />
-
-		<div class="wrapper">
-			<HelloWorld msg="You did it!" />
-
-			<nav>
-				<RouterLink to="/">Home</RouterLink>
-				<RouterLink to="/about">About</RouterLink>
-			</nav>
-		</div>
-	</header>
-
 	<RouterView />
 </template>
 
-<style scoped>
-header {
-	line-height: 1.5;
-	max-height: 100vh;
-}
-
-.logo {
-	display: block;
-	margin: 0 auto 2rem;
-}
-
-nav {
-	width: 100%;
-	font-size: 12px;
-	text-align: center;
-	margin-top: 2rem;
-}
-
-nav a.router-link-exact-active {
-	color: var(--color-text);
-}
-
-nav a.router-link-exact-active:hover {
-	background-color: transparent;
-}
-
-nav a {
-	display: inline-block;
-	padding: 0 1rem;
-	border-left: 1px solid var(--color-border);
-}
-
-nav a:first-of-type {
-	border: 0;
-}
-
-@media (min-width: 1024px) {
-	header {
-		display: flex;
-		place-items: center;
-		padding-right: calc(var(--section-gap) / 2);
-	}
-
-	.logo {
-		margin: 0 2rem 0 0;
-	}
-
-	header .wrapper {
-		display: flex;
-		place-items: flex-start;
-		flex-wrap: wrap;
-	}
-
-	nav {
-		text-align: left;
-		margin-left: -1rem;
-		font-size: 1rem;
-
-		padding: 1rem 0;
-		margin-top: 1rem;
-	}
-}
-</style>
+<style scoped></style>

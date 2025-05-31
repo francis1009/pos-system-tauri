@@ -13,9 +13,9 @@
 		"windows": [
 			{
 				"title": "pos-system",
-				"width": 800,
-				"height": 600,
-				"resizable": true,
+				"width": 1024,
+				"height": 768,
+				"resizable": false,
 				"fullscreen": false
 			}
 		],
@@ -33,10 +33,5 @@
 			"icons/icon.icns",
 			"icons/icon.ico"
 		]
-	},
-	"plugins": {
-		"sql": {
-			"preload": ["sqlite:pos_system.db"]
-		}
 	}
 }
