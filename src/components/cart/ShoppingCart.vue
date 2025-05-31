@@ -8,7 +8,7 @@ import ShoppingCartItem from "@/components/cart/ShoppingCartItem.vue";
 import { useCart } from "@/composables/cart";
 import { computed } from "vue";
 
-const { total, cart, updateItemQuantity, removeFromCart } = useCart();
+const { total, cart, selectedItemId, selectItem, updateItemQuantity, removeFromCart } = useCart();
 
 const formatter = new Intl.NumberFormat("en-SG", {
 	style: "currency",
@@ -28,6 +28,10 @@ function onQuantityChange(itemId: string, quantity: number) {
 	} else {
 		updateItemQuantity(itemId, quantity);
 	}
+}
+
+function onItemSelect(itemId: string) {
+	selectItem(itemId);
 }
 </script>
 <template>
@@ -53,7 +57,9 @@ function onQuantityChange(itemId: string, quantity: number) {
 							:key="item.id"
 							:item="item"
 							:formatter="formatter"
+							:is-selected="selectedItemId === item.id"
 							@update-quantity="onQuantityChange"
+							@select-item="onItemSelect"
 						/>
 					</div>
 				</ScrollArea>

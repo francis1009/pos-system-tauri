@@ -1,8 +1,11 @@
 <script setup lang="ts">
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { Search, Package, History, Trash2 } from "lucide-vue-next";
+import { Search, Package, History, Trash2, Settings } from "lucide-vue-next";
 import ShoppingCart from "@/components/cart/ShoppingCart.vue";
+import { useCart } from "@/composables/cart";
+
+const { selectedItemId } = useCart();
 </script>
 
 <template>
@@ -21,9 +24,13 @@ import ShoppingCart from "@/components/cart/ShoppingCart.vue";
 					<Package className="w-5 h-5 mr-2" />
 					Add Open Item
 				</Button>
-				<Button variant="outline" class="w-full h-12 text-left justify-start text-base" disabled>
-					<Package className="w-5 h-5 mr-2" />
-					Add Open Item
+				<Button
+					variant="outline"
+					class="w-full h-12 text-left justify-start text-base"
+					:disabled="selectedItemId === null"
+				>
+					<Settings className="w-5 h-5 mr-2" />
+					Options
 				</Button>
 				<Button variant="outline" class="w-full h-12 text-left justify-start text-base">
 					<History className="w-5 h-5 mr-2" />

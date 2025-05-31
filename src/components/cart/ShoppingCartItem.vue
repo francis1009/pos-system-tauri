@@ -11,14 +11,25 @@ import type { CartItem } from "@/types/item";
 import { Button } from "@/components/ui/button";
 import { Trash2 } from "lucide-vue-next";
 
-const { item, formatter } = defineProps<{ item: CartItem; formatter: Intl.NumberFormat }>();
+const { item, formatter, isSelected } = defineProps<{
+	item: CartItem;
+	formatter: Intl.NumberFormat;
+	isSelected: boolean;
+}>();
 defineEmits<{
 	(updateQuantity: { itemId: string; quantity: number }): void;
+	(selectItem: { itemId: string }): void;
 }>();
 </script>
 
 <template>
-	<Card class="flex flex-row justify-between p-2 shadow-none">
+	<Card
+		:class="[
+			'flex flex-row justify-between p-2 shadow-none',
+			isSelected ? 'bg-blue-100 border-blue-500' : '',
+		]"
+		@click="() => $emit('selectItem', item.id)"
+	>
 		<CardHeader class="w-1/3 text-left">
 			<CardTitle class="text-lg font-bold"> {{ item.name }} </CardTitle>
 			<CardDescription class="text-sm text-gray-500">
@@ -29,15 +40,15 @@ defineEmits<{
 			<NumberField :model-value="item.quantity">
 				<NumberFieldContent>
 					<NumberFieldDecrement
-						@click="() => $emit('updateQuantity', item.id, item.quantity - 1)"
+						@click.stop="() => $emit('updateQuantity', item.id, item.quantity - 1)"
 					/>
 					<NumberFieldInput />
 					<NumberFieldIncrement
-						@click="() => $emit('updateQuantity', item.id, item.quantity + 1)"
+						@click.stop="() => $emit('updateQuantity', item.id, item.quantity + 1)"
 					/>
 				</NumberFieldContent>
 			</NumberField>
-			<Button variant="destructive" @click="() => $emit('updateQuantity', item.id, 0)">
+			<Button variant="destructive" @click.stop="() => $emit('updateQuantity', item.id, 0)">
 				<Trash2 />
 			</Button>
 			<p class="text-lg font-bold">
