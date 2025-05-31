@@ -31,6 +31,11 @@ function useCart() {
 		calculateTotal();
 	}
 
+	function clearCart() {
+		cart.value.clear();
+		total.value = 0;
+	}
+
 	function calculateTotal() {
 		const cartItems = Array.from(cart.value.values());
 		total.value = cartItems.reduce((sum, item) => sum + item.price * item.quantity, 0);
@@ -47,6 +52,7 @@ function useCart() {
 		selectedItemId,
 		addToCart,
 		removeFromCart,
+		clearCart,
 		updateItemQuantity,
 		selectItem,
 	};
