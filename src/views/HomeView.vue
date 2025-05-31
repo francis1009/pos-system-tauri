@@ -21,6 +21,10 @@ import ShoppingCart from "@/components/cart/ShoppingCart.vue";
 					<Package className="w-5 h-5 mr-2" />
 					Add Open Item
 				</Button>
+				<Button variant="outline" class="w-full h-12 text-left justify-start text-base" disabled>
+					<Package className="w-5 h-5 mr-2" />
+					Add Open Item
+				</Button>
 				<Button variant="outline" class="w-full h-12 text-left justify-start text-base">
 					<History className="w-5 h-5 mr-2" />
 					Transactions

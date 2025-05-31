@@ -22,6 +22,7 @@ function useCart() {
 		if (existingItem) {
 			existingItem.quantity = quantity;
 		}
+		calculateTotal();
 	}
 
 	function removeFromCart(itemId: string) {
@@ -31,7 +32,7 @@ function useCart() {
 
 	function calculateTotal() {
 		const cartItems = Array.from(cart.value.values());
-		total.value = cartItems.reduce((sum, item) => sum + item.price, 0);
+		total.value = cartItems.reduce((sum, item) => sum + item.price * item.quantity, 0);
 	}
 
 	return {

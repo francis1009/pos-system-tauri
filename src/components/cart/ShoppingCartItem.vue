@@ -8,6 +8,8 @@ import {
 	NumberFieldInput,
 } from "@/components/ui/number-field";
 import type { CartItem } from "@/types/item";
+import { Button } from "@/components/ui/button";
+import { Trash2 } from "lucide-vue-next";
 
 const { item, formatter } = defineProps<{ item: CartItem; formatter: Intl.NumberFormat }>();
 defineEmits<{
@@ -35,6 +37,9 @@ defineEmits<{
 					/>
 				</NumberFieldContent>
 			</NumberField>
+			<Button variant="destructive" @click="() => $emit('updateQuantity', item.id, 0)">
+				<Trash2 />
+			</Button>
 			<p class="text-lg font-bold">
 				{{ formatter.format(item.price * item.quantity) }}
 			</p>
