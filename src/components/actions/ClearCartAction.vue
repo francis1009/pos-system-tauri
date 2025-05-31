@@ -23,7 +23,7 @@ const { clearCart } = useCart();
 				variant="destructive"
 				class="w-full h-12 text-left justify-start hover:bg-red-700 text-base"
 			>
-				<Trash2 className="w-5 h-5 mr-2" />
+				<Trash2 class="w-5 h-5 mr-2" />
 				Clear Cart
 			</Button></DialogTrigger
 		><DialogContent>
@@ -39,7 +39,7 @@ const { clearCart } = useCart();
 						variant="destructive"
 						@click="clearCart"
 					>
-						<Trash2 className="w-5 h-5 mr-2" />
+						<Trash2 class="w-5 h-5 mr-2" />
 						Clear Cart
 					</Button>
 				</DialogClose>

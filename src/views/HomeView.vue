@@ -4,6 +4,7 @@ import { Button } from "@/components/ui/button";
 import { Search, Package, History, Settings } from "lucide-vue-next";
 import ShoppingCart from "@/components/cart/ShoppingCart.vue";
 import ClearCartAction from "@/components/actions/ClearCartAction.vue";
+import DateTimeDisplay from "@/components/DateTimeDisplay.vue";
 import { useCart } from "@/composables/cart";
 
 const { selectedItemId } = useCart();
@@ -18,11 +19,11 @@ const { selectedItemId } = useCart();
 			</CardHeader>
 			<CardContent class="space-y-3">
 				<Button variant="outline" class="w-full h-12 text-left justify-start text-base">
-					<Search className="w-5 h-5 mr-2" />
+					<Search class="w-5 h-5 mr-2" />
 					Search Items
 				</Button>
 				<Button variant="outline" class="w-full h-12 text-left justify-start text-base">
-					<Package className="w-5 h-5 mr-2" />
+					<Package class="w-5 h-5 mr-2" />
 					Add Open Item
 				</Button>
 				<Button
@@ -30,15 +31,18 @@ const { selectedItemId } = useCart();
 					class="w-full h-12 text-left justify-start text-base"
 					:disabled="selectedItemId === null"
 				>
-					<Settings className="w-5 h-5 mr-2" />
+					<Settings class="w-5 h-5 mr-2" />
 					Options
 				</Button>
 				<Button variant="outline" class="w-full h-12 text-left justify-start text-base">
-					<History className="w-5 h-5 mr-2" />
+					<History class="w-5 h-5 mr-2" />
 					Transactions
 				</Button>
 				<ClearCartAction />
 			</CardContent>
 		</Card>
 	</main>
+	<footer>
+		<DateTimeDisplay />
+	</footer>
 </template>
