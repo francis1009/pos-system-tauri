@@ -1,17 +1,20 @@
-export interface Transaction extends BaseTransaction {
-	id: number;
-}
-
 export interface BaseTransaction {
 	transaction_timestamp: string;
 	total_amount: number;
 }
 
-export interface TransactionItem {
+export interface Transaction extends BaseTransaction {
 	id: number;
+}
+
+export interface BaseTransactionItem {
 	transaction_id: string;
 	product_id: string | null;
 	item_name: string;
 	item_price_at_sale: number;
 	quantity: number;
+}
+
+export interface TransactionItem extends BaseTransactionItem {
+	id: number;
 }
