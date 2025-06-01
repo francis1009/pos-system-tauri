@@ -40,11 +40,13 @@ function useCart() {
 	function removeFromCart(itemId: string) {
 		cart.value.delete(itemId);
 		calculateTotal();
+		if (selectedItemId.value === itemId) selectedItemId.value = null;
 	}
 
 	function clearCart() {
 		cart.value.clear();
 		total.value = 0;
+		selectedItemId.value = null;
 	}
 
 	function calculateTotal() {
