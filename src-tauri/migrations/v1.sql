@@ -18,8 +18,8 @@ CREATE TABLE IF NOT EXISTS transaction_items (
     id INTEGER PRIMARY KEY AUTOINCREMENT,
     transaction_id TEXT NOT NULL,
     product_id TEXT, -- Null for "Open Items"
-    item_name TEXT NOT NULL, -- Name at the time of sale
-    item_price_at_sale INTEGER NOT NULL, -- Price at the time of sale
+    item_name TEXT NOT NULL,
+    item_price_at_sale INTEGER NOT NULL,
     quantity INTEGER NOT NULL,
     FOREIGN KEY (transaction_id) REFERENCES transactions(id) ON DELETE CASCADE,
     FOREIGN KEY (product_id) REFERENCES products(id) ON DELETE SET NULL

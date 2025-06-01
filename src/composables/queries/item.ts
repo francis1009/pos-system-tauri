@@ -1,13 +1,22 @@
 import { useQuery } from "@tanstack/vue-query";
-import { useItemsData } from "../data/item";
+import { useItemAPI } from "../api/item";
 
-const { getItems } = useItemsData();
+const { getAll, get } = useItemAPI();
 
-const useItemQueries = () => {
+const useItemQuery = () => {
 	function getAllItems() {
 		const { data, isLoading, error } = useQuery({
 			queryKey: ["items"],
-			queryFn: getItems,
+			queryFn: () => getAll(),
+		});
+
+		return { data, isLoading, error };
+	}
+
+	function getItem(barcode: string) {
+		const { data, isLoading, error } = useQuery({
+			queryKey: ["item", barcode],
+			queryFn: () => get(barcode),
 		});
 
 		return { data, isLoading, error };
@@ -15,7 +24,8 @@ const useItemQueries = () => {
 
 	return {
 		getAllItems,
+		getItem,
 	};
 };
 
-export { useItemQueries };
+export { useItemQuery };

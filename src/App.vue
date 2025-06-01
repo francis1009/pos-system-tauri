@@ -1,11 +1,11 @@
 <script setup lang="ts">
 import { RouterView } from "vue-router";
 import { onKeyStroke } from "@vueuse/core";
-import { useItemQueries } from "@/composables/queries/item";
+import { useItemQuery } from "@/composables/queries/item";
 import { useCart } from "@/composables/cart";
 import { ref } from "vue";
 
-const { getAllItems } = useItemQueries();
+const { getAllItems } = useItemQuery();
 const { isScanning, addToCart } = useCart();
 const { data: items, isLoading, error } = getAllItems();
 

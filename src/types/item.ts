@@ -8,4 +8,10 @@ interface CartItem extends Item {
 	quantity: number;
 }
 
-export type { Item, CartItem };
+interface CreateItem {
+	name: string;
+	barcode: string;
+	price: number;
+}
+
+export type { Item, CartItem, CreateItem };
