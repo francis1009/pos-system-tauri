@@ -22,6 +22,7 @@ function useCart() {
 		const openItem: CartItem = {
 			id: `open-${Date.now()}`,
 			name: "OPEN ITEM",
+			barcode: "",
 			price: 0,
 			quantity: 1,
 		};

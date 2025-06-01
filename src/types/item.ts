@@ -1,5 +1,6 @@
 interface Item {
 	id: string;
+	barcode: string;
 	name: string;
 	price: number;
 }

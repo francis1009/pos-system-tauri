@@ -2,12 +2,15 @@
 import { RouterView } from "vue-router";
 import { onKeyStroke } from "@vueuse/core";
 import { useItemQuery } from "@/composables/queries/item";
+import { useItemMutate } from "@/composables/mutations/item";
 import { useCart } from "@/composables/cart";
 import { ref } from "vue";
 
-const { getAllItems } = useItemQuery();
+const { getAllItems, getItem } = useItemQuery();
+const { createItem } = useItemMutate();
 const { isScanning, addToCart } = useCart();
 const { data: items, isLoading, error } = getAllItems();
+console.log(items);
 
 const scannedArray = ref<string[]>([]);
 
@@ -22,7 +25,16 @@ onKeyStroke((e) => {
 			console.log("Scanned Barcode:", itemBarcode);
 			const foundItem = items.value.find((item) => item.id === itemBarcode);
 			console.log("Found Item:", foundItem);
-			if (foundItem) addToCart(foundItem);
+			if (foundItem) {
+				addToCart(foundItem);
+			} else {
+				const res = createItem({
+					name: `whatever-${itemBarcode}`,
+					barcode: itemBarcode,
+					price: 100,
+				});
+				console.log(res);
+			}
 			scannedArray.value = [];
 			break;
 		}
