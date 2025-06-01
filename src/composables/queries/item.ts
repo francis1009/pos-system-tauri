@@ -1,7 +1,7 @@
 import { useQuery } from "@tanstack/vue-query";
-import { useItemsData } from "../data/item";
+import { useItemsRepository } from "../repository/item";
 
-const { getItems } = useItemsData();
+const { getItems } = useItemsRepository();
 
 const useItemQueries = () => {
 	function getAllItems() {

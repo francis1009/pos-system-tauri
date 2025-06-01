@@ -33,7 +33,7 @@ defineEmits<{
 		<CardHeader class="w-1/3 text-left">
 			<CardTitle class="text-lg font-bold"> {{ item.name }} </CardTitle>
 			<CardDescription class="text-sm text-gray-500">
-				{{ formatter.format(item.price) }} each
+				{{ formatter.format(item.price / 100) }} each
 			</CardDescription>
 		</CardHeader>
 		<CardContent class="flex items-center gap-3">
@@ -52,7 +52,7 @@ defineEmits<{
 				<Trash2 />
 			</Button>
 			<p class="text-lg font-bold">
-				{{ formatter.format(item.price * item.quantity) }}
+				{{ formatter.format((item.price / 100) * item.quantity) }}
 			</p>
 		</CardContent>
 	</Card>

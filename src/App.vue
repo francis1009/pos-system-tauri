@@ -20,7 +20,7 @@ onKeyStroke((e) => {
 		case "Enter": {
 			const itemBarcode = scannedArray.value.join("");
 			console.log("Scanned Barcode:", itemBarcode);
-			const foundItem = items.value.find((item) => item.id === itemBarcode);
+			const foundItem = items.value.find((item) => item.barcode === itemBarcode);
 			console.log("Found Item:", foundItem);
 			if (foundItem) addToCart(foundItem);
 			scannedArray.value = [];
