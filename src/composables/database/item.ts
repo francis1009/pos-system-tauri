@@ -6,4 +6,9 @@ async function getAllItems() {
 	return result;
 }
 
-export { getAllItems };
+async function getItemByBarcode(barcode: string): Promise<Item | null> {
+	const result = await db.select<Item[]>("SELECT * FROM products WHERE barcode = $1", [barcode]);
+	return result.length > 0 ? result[0] : null;
+}
+
+export { getAllItems, getItemByBarcode };
