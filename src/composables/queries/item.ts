@@ -1,7 +1,7 @@
 import { useQuery } from "@tanstack/vue-query";
-import { useItemsRepository } from "../repository/item";
+import { useItemsRepository } from "../service/item";
 
-const { getItems } = useItemsRepository();
+const { getItems, getItem } = useItemsRepository();
 
 const useItemQuery = () => {
 	function getAllItems() {
@@ -13,10 +13,10 @@ const useItemQuery = () => {
 		return { data, isLoading, error };
 	}
 
-	function getItem(barcode: string) {
+	function getItemByBarcode(barcode: string) {
 		const { data, isLoading, error } = useQuery({
 			queryKey: ["item", barcode],
-			queryFn: () => get(barcode),
+			queryFn: () => getItem(barcode),
 		});
 
 		return { data, isLoading, error };
@@ -24,7 +24,7 @@ const useItemQuery = () => {
 
 	return {
 		getAllItems,
-		getItem,
+		getItemByBarcode,
 	};
 };
 

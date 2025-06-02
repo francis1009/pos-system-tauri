@@ -27,12 +27,11 @@ onKeyStroke((e) => {
 			if (foundItem) {
 				addToCart(foundItem);
 			} else {
-				const res = createItem({
+				createItem({
 					name: `whatever-${itemBarcode}`,
 					barcode: itemBarcode,
 					price: 100,
 				});
-				console.log(res);
 			}
 			scannedArray.value = [];
 			break;

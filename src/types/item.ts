@@ -1,5 +1,5 @@
 interface Item {
-	id: string;
+	id: number;
 	barcode: string;
 	name: string;
 	price: number;
@@ -9,10 +9,10 @@ interface CartItem extends Item {
 	quantity: number;
 }
 
-interface CreateItem {
+interface BaseItem {
 	name: string;
 	barcode: string;
 	price: number;
 }
 
-export type { Item, CartItem, CreateItem };
+export type { Item, CartItem, BaseItem };
