@@ -1,8 +1,8 @@
 import { useMutation, useQueryClient } from "@tanstack/vue-query";
-import { useItemsRepository } from "../service/item";
+import { useItemService } from "@/composables/service/item";
 import type { Item } from "@/types/item";
 
-const { addItem } = useItemsRepository();
+const { addItem } = useItemService();
 
 const useItemMutate = () => {
 	const queryClient = useQueryClient();

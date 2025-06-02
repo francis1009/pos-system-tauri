@@ -1,7 +1,7 @@
 import type { Item, BaseItem } from "@/types/item";
 import { getAllItems, createItem, getItemByBarcode } from "@/composables/repository/item";
 
-const useItemsRepository = () => {
+const useItemService = () => {
 	async function getItems(): Promise<Item[]> {
 		return await getAllItems();
 	}
@@ -21,4 +21,4 @@ const useItemsRepository = () => {
 	};
 };
 
-export { useItemsRepository };
+export { useItemService };
