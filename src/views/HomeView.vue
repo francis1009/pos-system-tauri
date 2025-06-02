@@ -40,6 +40,38 @@ onKeyStroke((e) => {
 			}
 			break;
 		}
+		case "Shift":
+		case "Control":
+		case "Alt":
+		case "Meta":
+		case "CapsLock":
+		case "Tab":
+		case "Escape":
+		case "F1":
+		case "F2":
+		case "F3":
+		case "F4":
+		case "F5":
+		case "F6":
+		case "F7":
+		case "F8":
+		case "F9":
+		case "F10":
+		case "F11":
+		case "F12":
+		case "ArrowUp":
+		case "ArrowDown":
+		case "ArrowLeft":
+		case "ArrowRight":
+		case "Home":
+		case "End":
+		case "PageUp":
+		case "PageDown":
+		case "Insert":
+		case "Delete":
+		case "Backspace":
+			e.preventDefault();
+			break;
 		default:
 			e.preventDefault();
 			scannedArray.value.push(e.key);
@@ -54,9 +86,13 @@ const updateDialogState = (value: boolean) => {
 	}
 };
 
-const handleDialogCreateItem = async (itemData: { barcode: string; name: string; price: number }) => {
+const handleDialogCreateItem = async (itemData: {
+	barcode: string;
+	name: string;
+	price: number;
+}) => {
 	const newItem = await createItem(itemData);
-	console.log(newItem)
+	console.log(newItem);
 	addToCart(newItem);
 };
 </script>
