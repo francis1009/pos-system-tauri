@@ -6,19 +6,19 @@ let timerId: number | undefined = undefined;
 
 const updateTime = () => {
 	const now = new Date();
-	const dateOptions = {
-		year: "numeric",
-		month: "numeric",
-		day: "numeric",
-	};
-	const timeOptions = {
-		hour: "numeric",
-		minute: "2-digit",
-		second: "2-digit",
-		hour12: true,
-	};
 	currentTime.value =
-		now.toLocaleString("en-SG", dateOptions) + " " + now.toLocaleString("en-SG", timeOptions);
+		now.toLocaleDateString("en-SG", {
+			year: "numeric",
+			month: "numeric",
+			day: "numeric",
+		}) +
+		" " +
+		now.toLocaleString("en-SG", {
+			hour: "numeric",
+			minute: "2-digit",
+			second: "2-digit",
+			hour12: true,
+		});
 };
 
 onMounted(() => {

@@ -1,50 +1,76 @@
 <script setup lang="ts">
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Button } from "@/components/ui/button";
-import { Search, Package, History, Settings } from "lucide-vue-next";
 import ShoppingCart from "@/components/cart/ShoppingCart.vue";
-import ClearCartAction from "@/components/actions/ClearCartAction.vue";
+import QuickActionsTab from "@/components/actions/QuickActionsTab.vue";
 import DateTimeDisplay from "@/components/DateTimeDisplay.vue";
+import CreateItemDialog from "@/components/CreateItemDialog.vue";
+import { onKeyStroke } from "@vueuse/core";
+import { useItemQuery } from "@/composables/queries/item";
+import { useItemMutate } from "@/composables/mutations/item";
 import { useCart } from "@/composables/cart";
+import { ref } from "vue";
 
-const { addOpenItemToCart, selectedItemId } = useCart();
+const { getAllItems } = useItemQuery();
+const { createItem } = useItemMutate();
+const { isScanning, addToCart } = useCart();
+const { data: items, isLoading, error } = getAllItems();
+
+const scannedArray = ref<string[]>([]);
+const showCreateItemDialog = ref(false);
+const currentScannedBarcode = ref<string | null>(null);
+
+onKeyStroke((e) => {
+	if (!isScanning.value) return;
+	if (isLoading.value || error.value || !items.value) return;
+	e.preventDefault();
+
+	switch (e.key) {
+		case "Enter": {
+			const itemBarcode = scannedArray.value.join("");
+			console.log("Scanned Barcode:", itemBarcode);
+			scannedArray.value = [];
+			if (!itemBarcode) return;
+			const foundItem = items.value.find((item) => item.barcode === itemBarcode);
+			console.log("Found Item:", foundItem);
+			if (foundItem) {
+				addToCart(foundItem);
+			} else {
+				isScanning.value = false;
+				currentScannedBarcode.value = itemBarcode;
+				showCreateItemDialog.value = true;
+			}
+			break;
+		}
+		default:
+			e.preventDefault();
+			scannedArray.value.push(e.key);
+	}
+});
+
+const updateDialogState = (value: boolean) => {
+	isScanning.value = true;
+	showCreateItemDialog.value = value;
+	if (!value) {
+		currentScannedBarcode.value = null;
+	}
+};
+
+const handleDialogCreateItem = async (itemData: { barcode: string; name: string; price: number }) => {
+	const newItem = await createItem(itemData);
+	console.log(newItem)
+	addToCart(newItem);
+};
 </script>
 
 <template>
 	<main class="flex min-h-screen gap-4 justify-center p-6 text-center">
 		<ShoppingCart />
-		<Card class="h-fit w-1/4">
-			<CardHeader>
-				<CardTitle class="text-2xl font-bold"> Quick Actions </CardTitle>
-			</CardHeader>
-			<CardContent class="space-y-3">
-				<Button variant="outline" class="w-full h-12 text-left justify-start text-base">
-					<Search class="w-5 h-5 mr-2" />
-					Search Items
-				</Button>
-				<Button
-					variant="outline"
-					class="w-full h-12 text-left justify-start text-base"
-					@click="addOpenItemToCart"
-				>
-					<Package class="w-5 h-5 mr-2" />
-					Add Open Item
-				</Button>
-				<Button
-					variant="outline"
-					class="w-full h-12 text-left justify-start text-base"
-					:disabled="selectedItemId === null"
-				>
-					<Settings class="w-5 h-5 mr-2" />
-					Options
-				</Button>
-				<Button variant="outline" class="w-full h-12 text-left justify-start text-base">
-					<History class="w-5 h-5 mr-2" />
-					Transactions
-				</Button>
-				<ClearCartAction />
-			</CardContent>
-		</Card>
+		<QuickActionsTab />
+		<CreateItemDialog
+			:open="showCreateItemDialog"
+			:barcode="currentScannedBarcode"
+			@update:open="updateDialogState"
+			@create-item="handleDialogCreateItem"
+		/>
 	</main>
 	<footer>
 		<DateTimeDisplay />

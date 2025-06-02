@@ -16,7 +16,7 @@ const formatter = new Intl.NumberFormat("en-SG", {
 	minimumFractionDigits: 2,
 });
 
-const formattedTotal = computed(() => formatter.format(total.value));
+const formattedTotal = computed(() => formatter.format(total.value / 100));
 
 const cartArray = computed(() => {
 	return Array.from(cart.value.values());
