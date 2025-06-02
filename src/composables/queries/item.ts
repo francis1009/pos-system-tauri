@@ -7,7 +7,7 @@ const useItemQuery = () => {
 	function getAllItems() {
 		const { data, isLoading, error } = useQuery({
 			queryKey: ["items"],
-			queryFn: () => getAll(),
+			queryFn: getItems,
 		});
 
 		return { data, isLoading, error };

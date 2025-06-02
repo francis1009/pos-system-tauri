@@ -6,11 +6,10 @@ import { useItemMutate } from "@/composables/mutations/item";
 import { useCart } from "@/composables/cart";
 import { ref } from "vue";
 
-const { getAllItems, getItem } = useItemQuery();
+const { getAllItems } = useItemQuery();
 const { createItem } = useItemMutate();
 const { isScanning, addToCart } = useCart();
 const { data: items, isLoading, error } = getAllItems();
-console.log(items);
 
 const scannedArray = ref<string[]>([]);
 
