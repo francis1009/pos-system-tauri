@@ -11,8 +11,16 @@ import { computed } from "vue";
 import type { BaseTransactionItem } from "@/types/transaction";
 import { useTransactionItemMutation } from "@/composables/mutations/transactionItem";
 
-const { total, cart, selectedItemId, selectItem, updateItemQuantity, removeFromCart, clearCart } =
-	useCart();
+const {
+	total,
+	cart,
+	selectedItemId,
+	selectItem,
+	updateItemQuantity,
+	removeFromCart,
+	clearCart,
+	storePreviousCart,
+} = useCart();
 const { create } = useTransactionMutation();
 const { batchCreate } = useTransactionItemMutation();
 
@@ -56,6 +64,7 @@ async function onTransactionComplete() {
 
 	// TODO: Create a receipt using an invisible element
 
+	storePreviousCart(transactionId);
 	clearCart();
 }
 </script>

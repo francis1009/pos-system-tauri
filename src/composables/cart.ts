@@ -2,6 +2,8 @@ import type { CartItem, Item } from "@/types/item";
 import { readonly, ref } from "vue";
 
 const cart = ref<Map<number, CartItem>>(new Map());
+const previousCart = ref<Map<number, CartItem>>(new Map());
+const prevTransactionId = ref<number | null>(null);
 const total = ref(0);
 const isScanning = ref(true);
 const selectedItemId = ref<number | null>(null);
@@ -44,6 +46,11 @@ function useCart() {
 		if (selectedItemId.value === itemId) selectedItemId.value = null;
 	}
 
+	function storePreviousCart(transactionId: number) {
+		previousCart.value = new Map(cart.value);
+		prevTransactionId.value = transactionId;
+	}
+
 	function clearCart() {
 		cart.value.clear();
 		total.value = 0;
@@ -61,6 +68,7 @@ function useCart() {
 
 	return {
 		cart: readonly(cart),
+		previousCart: readonly(previousCart),
 		total: readonly(total),
 		isScanning,
 		selectedItemId,
@@ -70,6 +78,7 @@ function useCart() {
 		clearCart,
 		updateItemQuantity,
 		selectItem,
+		storePreviousCart,
 	};
 }
 
