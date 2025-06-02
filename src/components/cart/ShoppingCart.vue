@@ -6,9 +6,15 @@ import { ScrollArea } from "@/components/ui/scroll-area";
 import { ShoppingCart } from "lucide-vue-next";
 import ShoppingCartItem from "@/components/cart/ShoppingCartItem.vue";
 import { useCart } from "@/composables/cart";
+import { useTransactionMutation } from "@/composables/mutations/transaction";
 import { computed } from "vue";
+import type { BaseTransactionItem } from "@/types/transaction";
+import { useTransactionItemMutation } from "@/composables/mutations/transactionItem";
 
-const { total, cart, selectedItemId, selectItem, updateItemQuantity, removeFromCart } = useCart();
+const { total, cart, selectedItemId, selectItem, updateItemQuantity, removeFromCart, clearCart } =
+	useCart();
+const { create } = useTransactionMutation();
+const { batchCreate } = useTransactionItemMutation();
 
 const formatter = new Intl.NumberFormat("en-SG", {
 	style: "currency",
@@ -34,7 +40,24 @@ function onItemSelect(itemId: number) {
 	selectItem(itemId);
 }
 
-function onTransactionComplete() {}
+async function onTransactionComplete() {
+	const transactionId = await create(total.value);
+	const cartItems = Array.from(cart.value.values()).map((item) => {
+		const ret: BaseTransactionItem = {
+			transaction_id: transactionId,
+			product_id: item.id,
+			item_name: item.name,
+			item_price_at_sale: item.price,
+			quantity: item.quantity,
+		};
+		return ret;
+	});
+	await batchCreate(cartItems);
+
+	// TODO: Create a receipt using an invisible element
+
+	clearCart();
+}
 </script>
 <template>
 	<div class="flex grow flex-col gap-4">

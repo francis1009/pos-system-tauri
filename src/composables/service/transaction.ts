@@ -1,4 +1,4 @@
-import { getAllTransactions, createTransaction } from "../repository/transaction";
+import { getAllTransactions, createTransaction } from "@/composables/repository/transaction";
 
 const useTransactionService = () => {
 	async function getTransactions() {

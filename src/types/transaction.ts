@@ -8,8 +8,8 @@ export interface Transaction extends BaseTransaction {
 }
 
 export interface BaseTransactionItem {
-	transaction_id: string;
-	product_id: string | null;
+	transaction_id: number;
+	product_id: number | null;
 	item_name: string;
 	item_price_at_sale: number;
 	quantity: number;
