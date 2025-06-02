@@ -4,10 +4,10 @@ import type { Item } from "@/types/item";
 
 const { addItem } = useItemService();
 
-const useItemMutate = () => {
+const useItemMutation = () => {
 	const queryClient = useQueryClient();
 
-	const { mutateAsync: createItem } = useMutation({
+	const { mutateAsync: create } = useMutation({
 		mutationFn: addItem,
 		onSuccess: (data) => {
 			queryClient.setQueryData(["items"], (oldData: Array<Item> | undefined) =>
@@ -17,8 +17,8 @@ const useItemMutate = () => {
 	});
 
 	return {
-		createItem,
+		create,
 	};
 };
 
-export { useItemMutate };
+export { useItemMutation };
