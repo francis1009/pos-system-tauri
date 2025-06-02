@@ -1,10 +1,10 @@
 import type { CartItem, Item } from "@/types/item";
 import { readonly, ref } from "vue";
 
-const cart = ref<Map<string, CartItem>>(new Map());
+const cart = ref<Map<number, CartItem>>(new Map());
 const total = ref(0);
 const isScanning = ref(true);
-const selectedItemId = ref<string | null>(null);
+const selectedItemId = ref<number | null>(null);
 
 function useCart() {
 	function addToCart(item: Item) {
@@ -20,7 +20,7 @@ function useCart() {
 
 	function addOpenItemToCart() {
 		const openItem: CartItem = {
-			id: `open-${Date.now()}`,
+			id: Date.now(),
 			name: "OPEN ITEM",
 			barcode: "",
 			price: 0,
@@ -30,7 +30,7 @@ function useCart() {
 		selectItem(openItem.id);
 	}
 
-	function updateItemQuantity(itemId: string, quantity: number) {
+	function updateItemQuantity(itemId: number, quantity: number) {
 		const existingItem = cart.value.get(itemId);
 		if (existingItem) {
 			existingItem.quantity = quantity;
@@ -38,7 +38,7 @@ function useCart() {
 		calculateTotal();
 	}
 
-	function removeFromCart(itemId: string) {
+	function removeFromCart(itemId: number) {
 		cart.value.delete(itemId);
 		calculateTotal();
 		if (selectedItemId.value === itemId) selectedItemId.value = null;
@@ -55,7 +55,7 @@ function useCart() {
 		total.value = cartItems.reduce((sum, item) => sum + item.price * item.quantity, 0);
 	}
 
-	function selectItem(itemId: string) {
+	function selectItem(itemId: number) {
 		selectedItemId.value = selectedItemId.value === itemId ? null : itemId;
 	}
 
