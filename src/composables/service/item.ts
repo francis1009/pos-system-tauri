@@ -1,5 +1,10 @@
 import type { Item, BaseItem } from "@/types/item";
-import { getAllItems, createItem, getItemByBarcode } from "@/composables/repository/item";
+import {
+	getAllItems,
+	createItem,
+	getItemByBarcode,
+	updateItem,
+} from "@/composables/repository/item";
 
 const useItemService = () => {
 	async function getItems(): Promise<Item[]> {
@@ -14,10 +19,15 @@ const useItemService = () => {
 		return await createItem(item);
 	}
 
+	async function editItem(item: Item): Promise<Item> {
+		return await updateItem(item);
+	}
+
 	return {
 		getItems,
 		getItem,
 		addItem,
+		editItem,
 	};
 };
 

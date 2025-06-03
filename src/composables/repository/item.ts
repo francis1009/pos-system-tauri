@@ -25,4 +25,14 @@ async function createItem(item: BaseItem): Promise<Item> {
 	return toReturn;
 }
 
-export { getAllItems, getItemByBarcode, createItem };
+async function updateItem(item: Item): Promise<Item> {
+	const res = await db.execute("UPDATE products SET name = $1, price = $2 WHERE id = $3", [
+		item.name,
+		item.price,
+		item.id,
+	]);
+	if (res.rowsAffected === 0) throw new Error("Failed to update item");
+	return item;
+}
+
+export { getAllItems, getItemByBarcode, createItem, updateItem };
