@@ -4,7 +4,7 @@ import { useItemService } from "@/composables/service/item";
 const { getItems, getItem } = useItemService();
 
 const useItemQuery = () => {
-	function getAllItems() {
+	function getAll() {
 		const { data, isLoading, error } = useQuery({
 			queryKey: ["items"],
 			queryFn: getItems,
@@ -13,7 +13,7 @@ const useItemQuery = () => {
 		return { data, isLoading, error };
 	}
 
-	function getItemByBarcode(barcode: string) {
+	function getByBarcode(barcode: string) {
 		const { data, isLoading, error } = useQuery({
 			queryKey: ["item", barcode],
 			queryFn: () => getItem(barcode),
@@ -23,8 +23,8 @@ const useItemQuery = () => {
 	}
 
 	return {
-		getAllItems,
-		getItemByBarcode,
+		getAll,
+		getByBarcode,
 	};
 };
 

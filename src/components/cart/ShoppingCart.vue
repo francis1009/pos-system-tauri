@@ -5,10 +5,26 @@ import { Input } from "@/components/ui/input";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { ShoppingCart } from "lucide-vue-next";
 import ShoppingCartItem from "@/components/cart/ShoppingCartItem.vue";
+import CompleteTransactionAction from "@/components/actions/CompleteTransactionAction.vue";
 import { useCart } from "@/composables/cart";
-import { computed } from "vue";
+import { useTransactionMutation } from "@/composables/mutations/transaction";
+import { computed, ref } from "vue";
+import type { BaseTransactionItem } from "@/types/transaction";
+import { useTransactionItemMutation } from "@/composables/mutations/transactionItem";
 
-const { total, cart, selectedItemId, selectItem, updateItemQuantity, removeFromCart } = useCart();
+const {
+	total,
+	cart,
+	previousCart,
+	selectedItemId,
+	selectItem,
+	updateItemQuantity,
+	removeFromCart,
+	clearCart,
+	storePreviousCart,
+} = useCart();
+const { create } = useTransactionMutation();
+const { batchCreate } = useTransactionItemMutation();
 
 const formatter = new Intl.NumberFormat("en-SG", {
 	style: "currency",
@@ -22,7 +38,9 @@ const cartArray = computed(() => {
 	return Array.from(cart.value.values());
 });
 
-function onQuantityChange(itemId: string, quantity: number) {
+const isPrintReceiptDialogOpen = ref(false);
+
+function onQuantityChange(itemId: number, quantity: number) {
 	if (quantity <= 0) {
 		removeFromCart(itemId);
 	} else {
@@ -30,11 +48,43 @@ function onQuantityChange(itemId: string, quantity: number) {
 	}
 }
 
-function onItemSelect(itemId: string) {
+function onItemSelect(itemId: number) {
 	selectItem(itemId);
+}
+
+async function onTransactionComplete() {
+	const transactionId = await create(total.value);
+	const cartItems = cartArray.value.map((item) => {
+		const ret: BaseTransactionItem = {
+			transaction_id: transactionId,
+			product_id: item.id,
+			item_name: item.name,
+			item_price_at_sale: item.price,
+			quantity: item.quantity,
+		};
+		return ret;
+	});
+	await batchCreate(cartItems);
+
+	storePreviousCart(transactionId);
+	clearCart();
+	isPrintReceiptDialogOpen.value = true;
+}
+
+function onPrintReceipt() {
+	isPrintReceiptDialogOpen.value = false;
+	// Logic to print the receipt
+	console.log("Printing receipt...");
+	// Use an invisible element to style the receipt
+
+	console.log(previousCart.value);
 }
 </script>
 <template>
+	<CompleteTransactionAction
+		v-model:open="isPrintReceiptDialogOpen"
+		@print-receipt="onPrintReceipt"
+	/>
 	<div class="flex grow flex-col gap-4">
 		<Card class="h-[calc(100vh-200px)]">
 			<CardHeader class="flex flex-col gap-2">
@@ -66,8 +116,8 @@ function onItemSelect(itemId: string) {
 			</CardContent>
 		</Card>
 		<div class="grid grid-cols-2 gap-4">
-			<Button size="lg"> Complete Transaction </Button>
-			<Button variant="outline" size="lg"> Print Receipt </Button>
+			<Button size="lg" @click="onTransactionComplete"> Complete Transaction </Button>
+			<Button variant="outline" size="lg" @click="onPrintReceipt"> Print Receipt </Button>
 		</div>
 	</div>
 </template>

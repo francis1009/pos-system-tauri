@@ -5,14 +5,14 @@ import DateTimeDisplay from "@/components/DateTimeDisplay.vue";
 import CreateItemDialog from "@/components/CreateItemDialog.vue";
 import { onKeyStroke } from "@vueuse/core";
 import { useItemQuery } from "@/composables/queries/item";
-import { useItemMutate } from "@/composables/mutations/item";
+import { useItemMutation } from "@/composables/mutations/item";
 import { useCart } from "@/composables/cart";
 import { ref } from "vue";
 
-const { getAllItems } = useItemQuery();
-const { createItem } = useItemMutate();
+const { getAll } = useItemQuery();
+const { create } = useItemMutation();
 const { isScanning, addToCart } = useCart();
-const { data: items, isLoading, error } = getAllItems();
+const { data: items, isLoading, error } = getAll();
 
 const scannedArray = ref<string[]>([]);
 const showCreateItemDialog = ref(false);
@@ -73,7 +73,6 @@ onKeyStroke((e) => {
 			e.preventDefault();
 			break;
 		default:
-			e.preventDefault();
 			scannedArray.value.push(e.key);
 	}
 });
@@ -91,7 +90,7 @@ const handleDialogCreateItem = async (itemData: {
 	name: string;
 	price: number;
 }) => {
-	const newItem = await createItem(itemData);
+	const newItem = await create(itemData);
 	console.log(newItem);
 	addToCart(newItem);
 };
