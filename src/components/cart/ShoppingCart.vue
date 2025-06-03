@@ -22,7 +22,7 @@ const cartArray = computed(() => {
 	return Array.from(cart.value.values());
 });
 
-function onQuantityChange(itemId: string, quantity: number) {
+function onQuantityChange(itemId: number, quantity: number) {
 	if (quantity <= 0) {
 		removeFromCart(itemId);
 	} else {
@@ -30,7 +30,7 @@ function onQuantityChange(itemId: string, quantity: number) {
 	}
 }
 
-function onItemSelect(itemId: string) {
+function onItemSelect(itemId: number) {
 	selectItem(itemId);
 }
 </script>
