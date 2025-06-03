@@ -43,7 +43,7 @@ const handleSaveItem = () => {
 	emit("createItem", {
 		barcode: props.barcode,
 		name: itemName.value.trim(),
-		price: itemPrice.value,
+		price: itemPrice.value * 100,
 	});
 	emit('update:open', false)
 };
