@@ -5,15 +5,17 @@ import { Input } from "@/components/ui/input";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { ShoppingCart } from "lucide-vue-next";
 import ShoppingCartItem from "@/components/cart/ShoppingCartItem.vue";
+import CompleteTransactionAction from "@/components/actions/CompleteTransactionAction.vue";
 import { useCart } from "@/composables/cart";
 import { useTransactionMutation } from "@/composables/mutations/transaction";
-import { computed } from "vue";
+import { computed, ref } from "vue";
 import type { BaseTransactionItem } from "@/types/transaction";
 import { useTransactionItemMutation } from "@/composables/mutations/transactionItem";
 
 const {
 	total,
 	cart,
+	previousCart,
 	selectedItemId,
 	selectItem,
 	updateItemQuantity,
@@ -36,6 +38,8 @@ const cartArray = computed(() => {
 	return Array.from(cart.value.values());
 });
 
+const isPrintReceiptDialogOpen = ref(false);
+
 function onQuantityChange(itemId: number, quantity: number) {
 	if (quantity <= 0) {
 		removeFromCart(itemId);
@@ -50,7 +54,7 @@ function onItemSelect(itemId: number) {
 
 async function onTransactionComplete() {
 	const transactionId = await create(total.value);
-	const cartItems = Array.from(cart.value.values()).map((item) => {
+	const cartItems = cartArray.value.map((item) => {
 		const ret: BaseTransactionItem = {
 			transaction_id: transactionId,
 			product_id: item.id,
@@ -62,13 +66,25 @@ async function onTransactionComplete() {
 	});
 	await batchCreate(cartItems);
 
-	// TODO: Create a receipt using an invisible element
-
 	storePreviousCart(transactionId);
 	clearCart();
+	isPrintReceiptDialogOpen.value = true;
+}
+
+function onPrintReceipt() {
+	isPrintReceiptDialogOpen.value = false;
+	// Logic to print the receipt
+	console.log("Printing receipt...");
+	// Use an invisible element to style the receipt
+
+	console.log(previousCart.value);
 }
 </script>
 <template>
+	<CompleteTransactionAction
+		v-model:open="isPrintReceiptDialogOpen"
+		@print-receipt="onPrintReceipt"
+	/>
 	<div class="flex grow flex-col gap-4">
 		<Card class="h-[calc(100vh-200px)]">
 			<CardHeader class="flex flex-col gap-2">
@@ -101,7 +117,7 @@ async function onTransactionComplete() {
 		</Card>
 		<div class="grid grid-cols-2 gap-4">
 			<Button size="lg" @click="onTransactionComplete"> Complete Transaction </Button>
-			<Button variant="outline" size="lg"> Print Receipt </Button>
+			<Button variant="outline" size="lg" @click="onPrintReceipt"> Print Receipt </Button>
 		</div>
 	</div>
 </template>

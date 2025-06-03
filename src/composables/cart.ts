@@ -69,6 +69,7 @@ function useCart() {
 	return {
 		cart: readonly(cart),
 		previousCart: readonly(previousCart),
+		prevTransactionId: readonly(prevTransactionId),
 		total: readonly(total),
 		isScanning,
 		selectedItemId,
