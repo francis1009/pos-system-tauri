@@ -81,16 +81,6 @@ function useCart() {
 		return cart.value.get(selectedItemId.value);
 	}
 
-	function updateItemNameOrPrice(itemName: string, itemPrice: number) {
-		if (!selectedItemId.value) return;
-		const existingItem = cart.value.get(selectedItemId.value);
-		if (existingItem) {
-			existingItem.name = itemName;
-			existingItem.price = itemPrice;
-		}
-		calculateTotal();
-	}
-
 	return {
 		cart: readonly(cart),
 		previousCart: readonly(previousCart),
@@ -103,7 +93,6 @@ function useCart() {
 		removeFromCart,
 		clearCart,
 		updateItemQuantity,
-		updateItemNameOrPrice,
 		selectItem,
 		editItemInCart,
 		getSelectedItem,
