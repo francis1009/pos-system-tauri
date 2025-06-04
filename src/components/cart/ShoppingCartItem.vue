@@ -17,8 +17,8 @@ const { item, formatter, isSelected } = defineProps<{
 	isSelected: boolean;
 }>();
 defineEmits<{
-	(e: "updateQuantity", itemId: number, quantity: number): void;
-	(e: "selectItem", itemId: number): void;
+	updateQuantity: [itemId: number, quantity: number];
+	selectItem: [itemId: number];
 }>();
 </script>
 
