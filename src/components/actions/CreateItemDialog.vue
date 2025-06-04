@@ -46,6 +46,10 @@ const handleSaveItem = () => {
 		price: itemPrice.value * 100,
 	});
 	emit("update:open", false);
+
+	itemName.value = "";
+	itemPrice.value = undefined;
+	errorMessage.value = "";
 };
 </script>
 

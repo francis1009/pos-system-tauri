@@ -2,10 +2,38 @@
 import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Search, Package, History, Settings } from "lucide-vue-next";
+import CreateItemDialog from "@/components/actions/CreateItemDialog.vue";
 import ClearCartAction from "./ClearCartAction.vue";
+import type { Item } from "@/types/item";
 import { useCart } from "@/composables/cart";
+import { useBarcodeScanner } from "@/composables/barcodescanner";
+import { useItemMutate } from "@/composables/mutations/item";
 
-const { addOpenItemToCart, selectedItemId } = useCart();
+const { isScanning, addOpenItemToCart, addToCart, selectedItemId } = useCart();
+const { showCreateItemDialog, barcodeForCreation, completeItemCreation } = useBarcodeScanner();
+const { createItem } = useItemMutate();
+
+const closeDialogAndResumeScanning = () => {
+	completeItemCreation();
+	isScanning.value = true;
+};
+
+const handleDialogCreateItem = async (itemData: {
+	barcode: string;
+	name: string;
+	price: number;
+}) => {
+	try {
+		const newItem: Item = await createItem(itemData);
+		if (newItem) {
+			addToCart(newItem);
+		}
+	} catch (err) {
+		console.error("Error creating item in QuickActionsTab:", err);
+	} finally {
+		closeDialogAndResumeScanning();
+	}
+};
 </script>
 
 <template>
@@ -41,4 +69,11 @@ const { addOpenItemToCart, selectedItemId } = useCart();
 			<ClearCartAction />
 		</CardContent>
 	</Card>
+
+	<CreateItemDialog
+		:open="showCreateItemDialog"
+		:barcode="barcodeForCreation"
+		@update:open="closeDialogAndResumeScanning"
+		@create-item="handleDialogCreateItem"
+	/>
 </template>
