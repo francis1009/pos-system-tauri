@@ -1,7 +1,7 @@
 import { useQuery } from "@tanstack/vue-query";
 import { useTransactionService } from "@/composables/service/transaction";
 
-const { getTransactions } = useTransactionService();
+const { getTransactions, getTransactionByIdWithItems } = useTransactionService();
 
 const useTransactionQuery = () => {
 	function getAll() {
@@ -13,8 +13,17 @@ const useTransactionQuery = () => {
 		return { data, isLoading, error };
 	}
 
+	function getWithItems(id: number) {
+		const { data, isLoading, error } = useQuery({
+			queryKey: ["transactions", id],
+			queryFn: () => getTransactionByIdWithItems(id),
+		});
+		return { data, isLoading, error };
+	}
+
 	return {
 		getAll,
+		getWithItems,
 	};
 };
 

@@ -1,4 +1,8 @@
-import { getAllTransactions, createTransaction } from "@/composables/repository/transaction";
+import {
+	getAllTransactions,
+	getTransactionByIdWithItems as getWithId,
+	createTransaction,
+} from "@/composables/repository/transaction";
 
 const useTransactionService = () => {
 	async function getTransactions() {
@@ -9,8 +13,13 @@ const useTransactionService = () => {
 		return await createTransaction(cost);
 	}
 
+	async function getTransactionByIdWithItems(id: number) {
+		return await getWithId(id);
+	}
+
 	return {
 		getTransactions,
+		getTransactionByIdWithItems,
 		addTransaction,
 	};
 };
