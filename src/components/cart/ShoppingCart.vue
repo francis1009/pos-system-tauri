@@ -8,9 +8,10 @@ import ShoppingCartItem from "@/components/cart/ShoppingCartItem.vue";
 import CompleteTransactionAction from "@/components/actions/CompleteTransactionAction.vue";
 import { useCart } from "@/composables/cart";
 import { useTransactionMutation } from "@/composables/mutations/transaction";
-import { computed, ref } from "vue";
 import type { BaseTransactionItem } from "@/types/transaction";
 import { useTransactionItemMutation } from "@/composables/mutations/transactionItem";
+import { currencyFormatter } from "@/utils/formatter";
+import { computed, ref } from "vue";
 
 const {
 	total,
@@ -26,13 +27,7 @@ const {
 const { create } = useTransactionMutation();
 const { batchCreate } = useTransactionItemMutation();
 
-const formatter = new Intl.NumberFormat("en-SG", {
-	style: "currency",
-	currency: "SGD",
-	minimumFractionDigits: 2,
-});
-
-const formattedTotal = computed(() => formatter.format(total.value / 100));
+const formattedTotal = computed(() => currencyFormatter.format(total.value / 100));
 
 const cartArray = computed(() => {
 	return Array.from(cart.value.values());
@@ -106,7 +101,7 @@ function onPrintReceipt() {
 							v-for="item in cartArray"
 							:key="item.id"
 							:item="item"
-							:formatter="formatter"
+							:formatter="currencyFormatter"
 							:is-selected="selectedItemId === item.id"
 							@update-quantity="onQuantityChange"
 							@select-item="onItemSelect"
