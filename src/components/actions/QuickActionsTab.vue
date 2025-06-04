@@ -7,11 +7,11 @@ import ClearCartAction from "./ClearCartAction.vue";
 import type { Item } from "@/types/item";
 import { useCart } from "@/composables/cart";
 import { useBarcodeScanner } from "@/composables/barcodescanner";
-import { useItemMutate } from "@/composables/mutations/item";
+import { useItemMutation } from "@/composables/mutations/item";
 
 const { isScanning, addOpenItemToCart, addToCart, selectedItemId } = useCart();
 const { showCreateItemDialog, barcodeForCreation, completeItemCreation } = useBarcodeScanner();
-const { createItem } = useItemMutate();
+const { create } = useItemMutation();
 
 const closeDialogAndResumeScanning = () => {
 	completeItemCreation();
@@ -24,10 +24,8 @@ const handleDialogCreateItem = async (itemData: {
 	price: number;
 }) => {
 	try {
-		const newItem: Item = await createItem(itemData);
-		if (newItem) {
-			addToCart(newItem);
-		}
+		const newItem: Item = await create(itemData);
+		if (newItem) addToCart(newItem);
 	} catch (err) {
 		console.error("Error creating item in QuickActionsTab:", err);
 	} finally {
