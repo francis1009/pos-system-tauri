@@ -12,12 +12,24 @@ async function getAllTransactions() {
 async function getTransactionByIdWithItems(id: number): Promise<TransactionWithItems | null> {
 	const result = await db.select<TransactionWithItem[]>(
 		`SELECT * FROM transactions as t
-		INNER JOIN transaction_items as ti
+		LEFT JOIN transaction_items as ti
 		ON t.id = ti.transaction_id WHERE t.id = $1`,
 		[id],
 	);
-	console.log(result);
-	return null;
+	const ret: TransactionWithItems = {
+		id: result[0]?.transaction_id ?? 0,
+		transaction_timestamp: result[0]?.transaction_timestamp ?? "",
+		total_amount: result[0]?.total_amount ?? 0,
+		items: result.map((item) => ({
+			id: item.id,
+			transaction_id: item.transaction_id,
+			product_id: item.product_id,
+			item_name: item.item_name,
+			item_price_at_sale: item.item_price_at_sale,
+			quantity: item.quantity,
+		})),
+	};
+	return ret;
 }
 
 async function createTransaction(transactionCost: number): Promise<number> {

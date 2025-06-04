@@ -19,7 +19,7 @@ export interface TransactionItem extends BaseTransactionItem {
 	id: number;
 }
 
-export interface TransactionWithItem extends Transaction, TransactionItem {}
+export interface TransactionWithItem extends TransactionItem, BaseTransaction {}
 
 export interface TransactionWithItems extends Transaction {
 	items: TransactionItem[];
