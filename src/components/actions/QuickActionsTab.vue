@@ -1,21 +1,41 @@
 <script setup lang="ts">
 import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { Search, Package, History, Settings } from "lucide-vue-next";
+import { Search, Package, History } from "lucide-vue-next";
+import OptionsAction from "./OptionsAction.vue";
 import CreateItemDialog from "@/components/actions/CreateItemDialog.vue";
 import ClearCartAction from "./ClearCartAction.vue";
-import type { Item } from "@/types/item";
+import type { CartItem, Item } from "@/types/item";
 import { useCart } from "@/composables/cart";
 import { useBarcodeScanner } from "@/composables/barcodescanner";
 import { useItemMutation } from "@/composables/mutations/item";
 
-const { isScanning, addOpenItemToCart, addToCart, selectedItemId } = useCart();
-const { showCreateItemDialog, barcodeForCreation, completeItemCreation } = useBarcodeScanner();
-const { create } = useItemMutation();
+const { isScanning, addOpenItemToCart, addToCart, selectedItemId, editItemInCart } = useCart();
+const {
+	showCreateItemDialog,
+	showEditItemDialog,
+	barcodeForCreation,
+	requestItemEditing,
+	completeItemCreation,
+	completeItemEditing,
+} = useBarcodeScanner();
+const { create, update } = useItemMutation();
 
-const closeDialogAndResumeScanning = () => {
+const closeCreateItemDialog = () => {
 	completeItemCreation();
 	isScanning.value = true;
+};
+
+const handleOptionsDialog = (isOpen: boolean) => {
+	if (isOpen) {
+		if (selectedItemId.value !== null) {
+			requestItemEditing();
+			isScanning.value = false;
+		}
+	} else {
+		completeItemEditing();
+		isScanning.value = true;
+	}
 };
 
 const handleDialogCreateItem = async (itemData: {
@@ -29,7 +49,18 @@ const handleDialogCreateItem = async (itemData: {
 	} catch (err) {
 		console.error("Error creating item in QuickActionsTab:", err);
 	} finally {
-		closeDialogAndResumeScanning();
+		closeCreateItemDialog();
+	}
+};
+
+const handleDialogEditItem = async (cartItem: CartItem) => {
+	try {
+		await update(cartItem);
+		editItemInCart(cartItem);
+	} catch (err) {
+		console.error("Error editing item:", err);
+	} finally {
+		handleOptionsDialog(false);
 	}
 };
 </script>
@@ -52,14 +83,11 @@ const handleDialogCreateItem = async (itemData: {
 				<Package class="w-5 h-5 mr-2" />
 				Add Open Item
 			</Button>
-			<Button
-				variant="outline"
-				class="w-full h-12 text-left justify-start text-base"
-				:disabled="selectedItemId === null"
-			>
-				<Settings class="w-5 h-5 mr-2" />
-				Options
-			</Button>
+			<OptionsAction
+				:open="showEditItemDialog"
+				@update:open="handleOptionsDialog"
+				@edit-item="handleDialogEditItem"
+			/>
 			<Button variant="outline" class="w-full h-12 text-left justify-start text-base">
 				<History class="w-5 h-5 mr-2" />
 				Transactions
@@ -71,7 +99,7 @@ const handleDialogCreateItem = async (itemData: {
 	<CreateItemDialog
 		:open="showCreateItemDialog"
 		:barcode="barcodeForCreation"
-		@update:open="closeDialogAndResumeScanning"
+		@update:open="closeCreateItemDialog"
 		@create-item="handleDialogCreateItem"
 	/>
 </template>

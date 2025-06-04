@@ -66,6 +66,31 @@ function useCart() {
 		selectedItemId.value = selectedItemId.value === itemId ? null : itemId;
 	}
 
+	function editItemInCart(item: Item) {
+		const existingItem = cart.value.get(item.id);
+		if (existingItem) {
+			const quantity = existingItem.quantity;
+			const updateItem: CartItem = { ...item, quantity };
+			cart.value.set(item.id, updateItem);
+			calculateTotal();
+		}
+	}
+
+	function getSelectedItem() {
+		if (!selectedItemId.value) return;
+		return cart.value.get(selectedItemId.value);
+	}
+
+	function updateItemNameOrPrice(itemName: string, itemPrice: number) {
+		if (!selectedItemId.value) return;
+		const existingItem = cart.value.get(selectedItemId.value);
+		if (existingItem) {
+			existingItem.name = itemName;
+			existingItem.price = itemPrice;
+		}
+		calculateTotal();
+	}
+
 	return {
 		cart: readonly(cart),
 		previousCart: readonly(previousCart),
@@ -78,7 +103,10 @@ function useCart() {
 		removeFromCart,
 		clearCart,
 		updateItemQuantity,
+		updateItemNameOrPrice,
 		selectItem,
+		editItemInCart,
+		getSelectedItem,
 		storePreviousCart,
 	};
 }
