@@ -53,10 +53,12 @@ const handleDialogCreateItem = async (itemData: {
 	}
 };
 
-const handleDialogEditItem = async (cartItem: CartItem) => {
+const handleDialogEditItem = async (itemData: { cartItem: CartItem; isCustom: boolean }) => {
 	try {
-		await update(cartItem);
-		editItemInCart(cartItem);
+		if (!itemData.isCustom) {
+			await update(itemData.cartItem);
+		}
+		editItemInCart(itemData.cartItem);
 	} catch (err) {
 		console.error("Error editing item:", err);
 	} finally {

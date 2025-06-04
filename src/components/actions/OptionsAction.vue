@@ -21,7 +21,7 @@ const props = defineProps<{
 }>();
 const emit = defineEmits<{
 	(e: "update:open", value: boolean): void;
-	(e: "editItem", cartItem: CartItem): void;
+	(e: "editItem", itemData: { cartItem: CartItem; isCustom: boolean }): void;
 }>();
 
 const { isScanning, selectedItemId, getSelectedItem } = useCart();
@@ -31,7 +31,7 @@ const editName = ref("");
 const editPrice = ref(0);
 const editQuantity = ref(0);
 const editBarcode = ref("");
-
+const isCustom = ref(false);
 const errorMessage = ref("");
 
 const selectedItem = computed<CartItem | undefined>(() => {
@@ -47,7 +47,9 @@ watch(
 			editPrice.value = selectedItem.value.price / 100;
 			editQuantity.value = selectedItem.value.quantity;
 			editBarcode.value = selectedItem.value.barcode;
+			isCustom.value = selectedItem.value.name === "OPEN ITEM" || !selectedItem.value.barcode;
 			isScanning.value = false;
+			errorMessage.value = "";
 		}
 	},
 );
@@ -75,10 +77,8 @@ const handleEditItem = () => {
 		quantity: editQuantity.value,
 	};
 
-	emit("editItem", editItem);
+	emit("editItem", { cartItem: editItem, isCustom: isCustom.value });
 	emit("update:open", false);
-
-	errorMessage.value = "";
 };
 </script>
 
