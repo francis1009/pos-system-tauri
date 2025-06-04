@@ -2,13 +2,18 @@ import type { TransactionWithItem, Transaction, TransactionWithItems } from "@/t
 import { db } from "@/utils/db";
 
 async function getAllTransactions() {
-	const result = await db.select<Transaction[]>("SELECT * FROM transactions");
+	const result = await db.select<Transaction[]>(
+		`SELECT * FROM transactions 
+		ORDER BY id DESC`,
+	);
 	return result;
 }
 
 async function getTransactionByIdWithItems(id: number): Promise<TransactionWithItems | null> {
 	const result = await db.select<TransactionWithItem[]>(
-		"SELECT * FROM transactions as t INNER JOIN transaction_items as ti ON t.id = ti.transaction_id WHERE t.id = $1",
+		`SELECT * FROM transactions as t
+		INNER JOIN transaction_items as ti
+		ON t.id = ti.transaction_id WHERE t.id = $1`,
 		[id],
 	);
 	console.log(result);
