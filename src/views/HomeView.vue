@@ -3,6 +3,7 @@ import ShoppingCart from "@/components/cart/ShoppingCart.vue";
 import QuickActionsTab from "@/components/actions/QuickActionsTab.vue";
 import DateTimeDisplay from "@/components/DateTimeDisplay.vue";
 import CreateItemDialog from "@/components/CreateItemDialog.vue";
+import TransactionListDialog from "@/components/transaction/TransactionListDialog.vue";
 import { onKeyStroke } from "@vueuse/core";
 import { useItemQuery } from "@/composables/queries/item";
 import { useItemMutation } from "@/composables/mutations/item";
@@ -17,6 +18,7 @@ const { data: items, isLoading, error } = getAll();
 const scannedArray = ref<string[]>([]);
 const showCreateItemDialog = ref(false);
 const currentScannedBarcode = ref<string | null>(null);
+const isTransactionListDialogOpen = ref(false);
 
 onKeyStroke((e) => {
 	if (!isScanning.value) return;
@@ -99,12 +101,16 @@ const handleDialogCreateItem = async (itemData: {
 <template>
 	<main class="flex min-h-screen gap-4 justify-center p-6 text-center">
 		<ShoppingCart />
-		<QuickActionsTab />
+		<QuickActionsTab @open-transactions-dialog="isTransactionListDialogOpen = true" />
 		<CreateItemDialog
 			:open="showCreateItemDialog"
 			:barcode="currentScannedBarcode"
 			@update:open="updateDialogState"
 			@create-item="handleDialogCreateItem"
+		/>
+		<TransactionListDialog
+			:open="isTransactionListDialogOpen"
+			@update:open="(value) => (isTransactionListDialogOpen = value)"
 		/>
 	</main>
 	<footer>
