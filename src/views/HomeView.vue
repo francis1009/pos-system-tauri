@@ -8,10 +8,10 @@ import { useItemQuery } from "@/composables/queries/item";
 import { useCart } from "@/composables/cart";
 import { useBarcodeScanner } from "@/composables/barcodescanner";
 
-const { getAllItems } = useItemQuery();
+const { getAll } = useItemQuery();
 const { isScanning, addToCart } = useCart();
 const { requestItemCreation } = useBarcodeScanner();
-const { data: items, isLoading, error } = getAllItems();
+const { data: items, isLoading, error } = getAll();
 
 const scannedArray = ref<string[]>([]);
 
@@ -69,7 +69,6 @@ onKeyStroke((e) => {
 			e.preventDefault();
 			break;
 		default:
-			e.preventDefault();
 			scannedArray.value.push(e.key);
 	}
 });
