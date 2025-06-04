@@ -11,7 +11,11 @@ import TransactionList from "@/components/transaction/TransactionList.vue";
 
 <template>
 	<Dialog>
-		<DialogContent>
+		<DialogContent
+			@escape-key-down="$emit('update:open', false)"
+			@interact-outside="$emit('update:open', false)"
+			@pointer-down-outside="$emit('update:open', false)"
+		>
 			<DialogHeader>
 				<DialogTitle>Transaction List</DialogTitle>
 				<DialogDescription> View and manage your transactions. </DialogDescription>
