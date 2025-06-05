@@ -67,6 +67,7 @@ onKeyStroke((e) => {
 		case "Insert":
 		case "Delete":
 		case "Backspace":
+		case "Super":
 			e.preventDefault();
 			break;
 		default:

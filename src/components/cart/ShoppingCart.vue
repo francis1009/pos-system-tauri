@@ -48,11 +48,12 @@ function onItemSelect(itemId: number) {
 }
 
 async function onTransactionComplete() {
+	if (!cart.value.size) return; // TODO: sonnar no item in cart error
 	const transactionId = await create(total.value);
 	const cartItems = cartArray.value.map((item) => {
 		const ret: BaseTransactionItem = {
 			transaction_id: transactionId,
-			product_id: item.id,
+			product_id: item.name === "OPEN ITEM" || !item.barcode ? null : item.id,
 			item_name: item.name,
 			item_price_at_sale: item.price,
 			quantity: item.quantity,

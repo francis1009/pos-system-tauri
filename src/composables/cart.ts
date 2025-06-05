@@ -43,7 +43,10 @@ function useCart() {
 	function removeFromCart(itemId: number) {
 		cart.value.delete(itemId);
 		calculateTotal();
-		if (selectedItemId.value === itemId) selectedItemId.value = null;
+		if (selectedItemId.value === itemId) {
+			selectedItemId.value = null;
+			selectedItem.value = undefined;
+		}
 	}
 
 	function storePreviousCart(transactionId: number) {
@@ -55,6 +58,7 @@ function useCart() {
 		cart.value.clear();
 		total.value = 0;
 		selectedItemId.value = null;
+		selectedItem.value = undefined;
 	}
 
 	function calculateTotal() {
@@ -65,6 +69,7 @@ function useCart() {
 	function selectItem(itemId: number) {
 		selectedItemId.value = selectedItemId.value === itemId ? null : itemId;
 		if (selectedItemId.value) selectedItem.value = cart.value.get(selectedItemId.value);
+		else selectedItem.value = undefined;
 	}
 
 	function editItemInCart(item: Item) {
