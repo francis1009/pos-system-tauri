@@ -3,6 +3,7 @@ import { ref } from "vue";
 import ShoppingCart from "@/components/cart/ShoppingCart.vue";
 import QuickActionsTab from "@/components/actions/QuickActionsTab.vue";
 import DateTimeDisplay from "@/components/DateTimeDisplay.vue";
+import TransactionListDialog from "@/components/transaction/TransactionListDialog.vue";
 import { onKeyStroke } from "@vueuse/core";
 import { useItemQuery } from "@/composables/queries/item";
 import { useCart } from "@/composables/cart";
@@ -14,6 +15,7 @@ const { isScanning, requestItemCreation } = useBarcodeScanner();
 const { data: items, isLoading, error } = getAll();
 
 const scannedArray = ref<string[]>([]);
+const isTransactionListDialogOpen = ref(false);
 
 onKeyStroke((e) => {
 	if (!isScanning.value) return;
@@ -76,7 +78,11 @@ onKeyStroke((e) => {
 <template>
 	<main class="flex min-h-screen gap-4 justify-center p-6 text-center">
 		<ShoppingCart />
-		<QuickActionsTab />
+		<QuickActionsTab @open-transactions-dialog="isTransactionListDialogOpen = true" />
+		<TransactionListDialog
+			:open="isTransactionListDialogOpen"
+			@update:open="(value) => (isTransactionListDialogOpen = value)"
+		/>
 	</main>
 	<footer>
 		<DateTimeDisplay />
