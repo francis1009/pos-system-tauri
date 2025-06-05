@@ -5,7 +5,6 @@ const cart = ref<Map<number, CartItem>>(new Map());
 const previousCart = ref<Map<number, CartItem>>(new Map());
 const prevTransactionId = ref<number | null>(null);
 const total = ref(0);
-const isScanning = ref(true);
 const selectedItemId = ref<number | null>(null);
 
 function useCart() {
@@ -86,7 +85,6 @@ function useCart() {
 		previousCart: readonly(previousCart),
 		prevTransactionId: readonly(prevTransactionId),
 		total: readonly(total),
-		isScanning,
 		selectedItemId,
 		addToCart,
 		addOpenItemToCart,

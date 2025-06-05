@@ -10,7 +10,7 @@ import { useCart } from "@/composables/cart";
 import { useBarcodeScanner } from "@/composables/barcodescanner";
 import { useItemMutation } from "@/composables/mutations/item";
 
-const { isScanning, addOpenItemToCart, addToCart, selectedItemId, editItemInCart } = useCart();
+const { addOpenItemToCart, addToCart, selectedItemId, editItemInCart } = useCart();
 const {
 	showCreateItemDialog,
 	showEditItemDialog,
@@ -23,18 +23,15 @@ const { create, update } = useItemMutation();
 
 const closeCreateItemDialog = () => {
 	completeItemCreation();
-	isScanning.value = true;
 };
 
 const handleOptionsDialog = (isOpen: boolean) => {
 	if (isOpen) {
 		if (selectedItemId.value !== null) {
 			requestItemEditing();
-			isScanning.value = false;
 		}
 	} else {
 		completeItemEditing();
-		isScanning.value = true;
 	}
 };
 

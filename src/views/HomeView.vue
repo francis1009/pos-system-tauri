@@ -9,8 +9,8 @@ import { useCart } from "@/composables/cart";
 import { useBarcodeScanner } from "@/composables/barcodescanner";
 
 const { getAll } = useItemQuery();
-const { isScanning, addToCart } = useCart();
-const { requestItemCreation } = useBarcodeScanner();
+const { addToCart } = useCart();
+const { isScanning, requestItemCreation } = useBarcodeScanner();
 const { data: items, isLoading, error } = getAll();
 
 const scannedArray = ref<string[]>([]);
@@ -31,7 +31,6 @@ onKeyStroke((e) => {
 			if (foundItem) {
 				addToCart(foundItem);
 			} else {
-				isScanning.value = false;
 				requestItemCreation(itemBarcode);
 			}
 			break;

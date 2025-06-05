@@ -24,7 +24,7 @@ const emit = defineEmits<{
 	(e: "editItem", itemData: { cartItem: CartItem; isCustom: boolean }): void;
 }>();
 
-const { isScanning, selectedItemId, getSelectedItem } = useCart();
+const { selectedItemId, getSelectedItem } = useCart();
 
 const editId = ref<number | null>(null);
 const editName = ref("");
@@ -48,7 +48,6 @@ watch(
 			editQuantity.value = selectedItem.value.quantity;
 			editBarcode.value = selectedItem.value.barcode;
 			isCustom.value = selectedItem.value.name === "OPEN ITEM" || !selectedItem.value.barcode;
-			isScanning.value = false;
 			errorMessage.value = "";
 		}
 	},
