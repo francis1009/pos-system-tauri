@@ -1,11 +1,67 @@
 <script setup lang="ts">
 import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { Search, Package, History, Settings } from "lucide-vue-next";
+import { Search, Package, History } from "lucide-vue-next";
+import OptionsAction from "./OptionsAction.vue";
+import CreateItemDialog from "@/components/actions/CreateItemDialog.vue";
 import ClearCartAction from "./ClearCartAction.vue";
+import type { CartItem, Item } from "@/types/item";
 import { useCart } from "@/composables/cart";
+import { useBarcodeScanner } from "@/composables/barcodescanner";
+import { useItemMutation } from "@/composables/mutations/item";
 
-const { addOpenItemToCart, selectedItemId } = useCart();
+const { addOpenItemToCart, addToCart, selectedItemId, editItemInCart } = useCart();
+const {
+	showCreateItemDialog,
+	showEditItemDialog,
+	barcodeForCreation,
+	requestItemEditing,
+	completeItemCreation,
+	completeItemEditing,
+} = useBarcodeScanner();
+const { create, update } = useItemMutation();
+
+const closeCreateItemDialog = () => {
+	completeItemCreation();
+};
+
+const handleOptionsDialog = (isOpen: boolean) => {
+	if (isOpen) {
+		if (selectedItemId.value !== null) {
+			requestItemEditing();
+		}
+	} else {
+		completeItemEditing();
+	}
+};
+
+const handleDialogCreateItem = async (itemData: {
+	barcode: string;
+	name: string;
+	price: number;
+}) => {
+	try {
+		const newItem: Item = await create(itemData);
+		if (newItem) addToCart(newItem);
+	} catch (err) {
+		console.error("Error creating item in QuickActionsTab:", err);
+	} finally {
+		closeCreateItemDialog();
+	}
+};
+
+const handleDialogEditItem = async (itemData: { cartItem: CartItem; isCustom: boolean }) => {
+	try {
+		if (!itemData.isCustom) {
+			await update(itemData.cartItem);
+		}
+		editItemInCart(itemData.cartItem);
+	} catch (err) {
+		console.error("Error editing item:", err);
+	} finally {
+		handleOptionsDialog(false);
+	}
+};
 defineEmits<{
 	openTransactionsDialog: [];
 }>();
@@ -29,14 +85,11 @@ defineEmits<{
 				<Package class="w-5 h-5 mr-2" />
 				Add Open Item
 			</Button>
-			<Button
-				variant="outline"
-				class="w-full h-12 text-left justify-start text-base"
-				:disabled="selectedItemId === null"
-			>
-				<Settings class="w-5 h-5 mr-2" />
-				Options
-			</Button>
+			<OptionsAction
+				:open="showEditItemDialog"
+				@update:open="handleOptionsDialog"
+				@edit-item="handleDialogEditItem"
+			/>
 			<Button
 				variant="outline"
 				class="w-full h-12 text-left justify-start text-base"
@@ -48,4 +101,11 @@ defineEmits<{
 			<ClearCartAction />
 		</CardContent>
 	</Card>
+
+	<CreateItemDialog
+		:open="showCreateItemDialog"
+		:barcode="barcodeForCreation"
+		@update:open="closeCreateItemDialog"
+		@create-item="handleDialogCreateItem"
+	/>
 </template>

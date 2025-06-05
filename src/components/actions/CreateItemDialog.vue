@@ -22,7 +22,7 @@ const emit = defineEmits<{
 }>();
 
 const itemName = ref("");
-const itemPrice = ref<number | null>(null);
+const itemPrice = ref<number | undefined>(undefined);
 const errorMessage = ref("");
 
 const handleSaveItem = () => {
@@ -35,7 +35,7 @@ const handleSaveItem = () => {
 		errorMessage.value = "Please enter a name for the item.";
 		return;
 	}
-	if (itemPrice.value === null || isNaN(itemPrice.value) || itemPrice.value < 0) {
+	if (itemPrice.value === undefined || isNaN(itemPrice.value) || itemPrice.value < 0) {
 		errorMessage.value = "Please enter a valid price (0 or greater).";
 		return;
 	}
@@ -45,7 +45,11 @@ const handleSaveItem = () => {
 		name: itemName.value.trim(),
 		price: itemPrice.value * 100,
 	});
-	emit('update:open', false)
+	emit("update:open", false);
+
+	itemName.value = "";
+	itemPrice.value = undefined;
+	errorMessage.value = "";
 };
 </script>
 

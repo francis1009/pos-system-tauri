@@ -2,7 +2,7 @@ import { useMutation, useQueryClient } from "@tanstack/vue-query";
 import { useItemService } from "@/composables/service/item";
 import type { Item } from "@/types/item";
 
-const { addItem } = useItemService();
+const { addItem, editItem } = useItemService();
 
 const useItemMutation = () => {
 	const queryClient = useQueryClient();
@@ -16,8 +16,23 @@ const useItemMutation = () => {
 		},
 	});
 
+	const { mutateAsync: update } = useMutation({
+		mutationFn: editItem,
+		onSuccess: (data) => {
+			queryClient.setQueryData(["items"], (oldData: Array<Item> | undefined) => {
+				if (oldData) {
+					oldData.map((item) => (item.id === data.id ? data : item));
+				}
+			});
+			queryClient.setQueryData(["item", data.barcode], (oldData: Item | undefined) =>
+				oldData ? data : oldData,
+			);
+		},
+	});
+
 	return {
 		create,
+		update,
 	};
 };
 
