@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { ref, computed, watch } from "vue";
+import { ref, watch } from "vue";
 import { Button } from "@/components/ui/button";
 import {
 	Dialog,
@@ -24,7 +24,7 @@ const emit = defineEmits<{
 	(e: "editItem", itemData: { cartItem: CartItem; isCustom: boolean }): void;
 }>();
 
-const { selectedItemId, getSelectedItem } = useCart();
+const { selectedItem } = useCart();
 
 const editId = ref<number | null>(null);
 const editName = ref("");
@@ -33,10 +33,6 @@ const editQuantity = ref(0);
 const editBarcode = ref("");
 const isCustom = ref(false);
 const errorMessage = ref("");
-
-const selectedItem = computed<CartItem | undefined>(() => {
-	return getSelectedItem();
-});
 
 watch(
 	() => props.open,
@@ -87,8 +83,8 @@ const handleEditItem = () => {
 			<Button
 				variant="outline"
 				class="w-full h-12 text-left justify-start text-base"
-				:disabled="selectedItemId === null"
-				@click="if (selectedItemId) emit('update:open', true);"
+				:disabled="selectedItem === undefined"
+				@click="if (selectedItem) emit('update:open', true);"
 			>
 				<Settings class="w-5 h-5 mr-2" />
 				Options

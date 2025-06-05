@@ -6,6 +6,7 @@ const previousCart = ref<Map<number, CartItem>>(new Map());
 const prevTransactionId = ref<number | null>(null);
 const total = ref(0);
 const selectedItemId = ref<number | null>(null);
+const selectedItem = ref<CartItem | undefined>(undefined);
 
 function useCart() {
 	function addToCart(item: Item) {
@@ -63,6 +64,7 @@ function useCart() {
 
 	function selectItem(itemId: number) {
 		selectedItemId.value = selectedItemId.value === itemId ? null : itemId;
+		if (selectedItemId.value) selectedItem.value = cart.value.get(selectedItemId.value);
 	}
 
 	function editItemInCart(item: Item) {
@@ -75,17 +77,13 @@ function useCart() {
 		}
 	}
 
-	function getSelectedItem() {
-		if (!selectedItemId.value) return;
-		return cart.value.get(selectedItemId.value);
-	}
-
 	return {
 		cart: readonly(cart),
 		previousCart: readonly(previousCart),
 		prevTransactionId: readonly(prevTransactionId),
 		total: readonly(total),
 		selectedItemId,
+		selectedItem: readonly(selectedItem),
 		addToCart,
 		addOpenItemToCart,
 		removeFromCart,
@@ -93,7 +91,6 @@ function useCart() {
 		updateItemQuantity,
 		selectItem,
 		editItemInCart,
-		getSelectedItem,
 		storePreviousCart,
 	};
 }
