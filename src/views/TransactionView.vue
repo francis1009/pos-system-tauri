@@ -3,7 +3,7 @@ import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/com
 import { Button } from "@/components/ui/button";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import TransactionList from "@/components/transaction/TransactionList.vue";
-import { ArrowLeft } from "lucide-vue-next";
+import { ArrowLeft, Eye } from "lucide-vue-next";
 import { ref } from "vue";
 import { useTransactionQuery } from "@/composables/queries/transaction";
 import type { Transaction } from "@/types/transaction";
@@ -41,35 +41,38 @@ function onTransactionSelected(transaction: Transaction) {
 				</CardContent>
 			</Card>
 			<Card class="w-3/5">
-				<CardHeader>
-					<CardTitle>Transaction Details</CardTitle>
-					<CardDescription>Select a transaction to view details</CardDescription>
-				</CardHeader>
-				<CardContent>
-					<p class="text-center text-gray-500" v-if="selectedTransaction === null">
-						Please select a transaction from the list.
-					</p>
-					<div v-else>
+				<CardContent class="flex grow w-full">
+					<div
+						class="flex flex-col items-center justify-center w-full"
+						v-if="selectedTransaction === null"
+					>
+						<Eye class="w-10 h-10" />
+						<p class="text-center text-gray-500">Please select a transaction from the list.</p>
+					</div>
+					<div class="w-full" v-else>
 						<p class="text-lg font-semibold">Transaction ID: {{ selectedTransaction.id }}</p>
 						<p class="text-sm text-gray-500">
 							Date: {{ selectedTransaction.transaction_timestamp }}
 						</p>
 						<p class="text-sm">
-							Total Amount: {{ currencyFormatter.format(selectedTransaction.total_amount / 100) }}
+							Total Amount:
+							<span class="font-bold">
+								{{ currencyFormatter.format(selectedTransaction.total_amount / 100) }}
+							</span>
 						</p>
-					</div>
-					<hr />
-					<div class="py-2">
-						<div
-							class="grid grid-cols-3 gap-2 items-center"
-							v-for="item in data?.items"
-							:key="item.id"
-						>
-							<p class="font-semibold">{{ item.item_name }}</p>
-							<p class="text-sm text-center">X {{ item.quantity }}</p>
-							<p class="text-sm">
-								{{ currencyFormatter.format(item.item_price_at_sale / 100) }}
-							</p>
+						<hr />
+						<div class="py-2">
+							<div
+								class="grid grid-cols-3 gap-2 items-center"
+								v-for="item in data?.items"
+								:key="item.id"
+							>
+								<p class="font-semibold">{{ item.item_name }}</p>
+								<p class="text-sm text-center">X {{ item.quantity }}</p>
+								<p class="text-sm">
+									{{ currencyFormatter.format(item.item_price_at_sale / 100) }}
+								</p>
+							</div>
 						</div>
 					</div>
 				</CardContent>
