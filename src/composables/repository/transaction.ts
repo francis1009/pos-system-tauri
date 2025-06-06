@@ -3,7 +3,8 @@ import { db } from "@/utils/db";
 
 async function getAllTransactions() {
 	const result = await db.select<Transaction[]>(
-		`SELECT * FROM transactions 
+		`SELECT * FROM transactions
+		WHERE transaction_timestamp > datetime('now', '-1 day')
 		ORDER BY id DESC`,
 	);
 	return result;
