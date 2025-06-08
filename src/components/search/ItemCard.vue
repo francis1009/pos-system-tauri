@@ -6,14 +6,14 @@ const { item, formatter } = defineProps<{
 	formatter: Intl.NumberFormat;
 }>();
 defineEmits<{
-	selectItem: [itemId: number];
+	(e: "selectItem", item: Item): void;
 }>();
 </script>
 
 <template>
 	<Card
 		class="py-5 align-center w-full cursor-pointer hover:bg-gray-100 transition-colors"
-		@click="() => $emit('selectItem', item.id)"
+		@click="() => $emit('selectItem', item)"
 	>
 		<CardContent class="px-4 h-full flex flex-col">
 			<div class="flex-1 min-w-0">
