@@ -1,11 +1,22 @@
 import { readonly, ref } from "vue";
 
+const showSearchItemDialog = ref(false);
 const showCreateItemDialog = ref(false);
 const showEditItemDialog = ref(false);
 const barcodeForCreation = ref<string | null>(null);
 const isScanning = ref(true);
 
 function useBarcodeScanner() {
+	const requestItemSearch = () => {
+		isScanning.value = false;
+		showSearchItemDialog.value = true;
+	};
+
+	const completeItemSearch = () => {
+		isScanning.value = true;
+		showSearchItemDialog.value = false;
+	};
+
 	const requestItemCreation = (barcode: string) => {
 		isScanning.value = false;
 		barcodeForCreation.value = barcode;
@@ -30,9 +41,12 @@ function useBarcodeScanner() {
 
 	return {
 		isScanning: readonly(isScanning),
+		showSearchItemDialog: readonly(showSearchItemDialog),
 		showCreateItemDialog: readonly(showCreateItemDialog),
 		showEditItemDialog: readonly(showEditItemDialog),
 		barcodeForCreation: readonly(barcodeForCreation),
+		requestItemSearch,
+		completeItemSearch,
 		requestItemCreation,
 		completeItemCreation,
 		requestItemEditing,
