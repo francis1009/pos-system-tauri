@@ -10,7 +10,10 @@ import {
 } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
+import ItemCard from "@/components/search/ItemCard.vue";
 import { Search } from "lucide-vue-next";
+import { useItemQuery } from "@/composables/queries/item";
+import { currencyFormatter } from "@/utils/formatter";
 
 defineProps<{
 	open: boolean;
@@ -19,11 +22,14 @@ const emit = defineEmits<{
 	(e: "update:open", value: boolean): void;
 }>();
 
-const itemSearch = ref("");
+const { getAll } = useItemQuery();
+const { data: items, isLoading, error } = getAll();
 
-// const handleSearchItem = () => {
-// 	emit("update:open", false);
-// };
+const filter = ref("");
+
+const onItemSelect = () => {
+	emit("update:open", false);
+};
 </script>
 
 <template>
@@ -39,17 +45,31 @@ const itemSearch = ref("");
 			</Button>
 		</DialogTrigger>
 
-		<DialogContent class="sm:max-w-md">
+		<DialogContent class="sm:max-w-3xl max-h-[90vh]">
 			<DialogHeader>
-				<DialogTitle>Search Items</DialogTitle>
+				<DialogTitle class="mb-3">Search Items</DialogTitle>
 				<Input
 					id="item-search"
-					v-model.number="itemSearch"
+					v-model="filter"
 					type="text"
 					class="w-80 text-base"
-					placeholder="Search by name, barcode, or ID..."
+					placeholder="Search by name, or barcode..."
 				/>
 			</DialogHeader>
+
+			<div v-if="isLoading"><p>Loading Items</p></div>
+			<div v-else-if="error">
+				<p class="text-red-500">{{ error }}</p>
+			</div>
+			<div else class="grid grid-cols-3 gap-4">
+				<ItemCard
+					v-for="item in items"
+					:key="item.id"
+					:item="item"
+					:formatter="currencyFormatter"
+					@select-item="onItemSelect"
+				/>
+			</div>
 
 			<DialogFooter></DialogFooter>
 		</DialogContent>
