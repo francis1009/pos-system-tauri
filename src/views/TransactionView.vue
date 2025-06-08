@@ -61,7 +61,7 @@ function onTransactionSelected(transaction: Transaction) {
 							</span>
 						</p>
 						<hr />
-						<div class="py-2">
+						<ScrollArea class="h-132 py-2">
 							<div
 								class="grid grid-cols-3 gap-2 items-center"
 								v-for="item in data?.items"
@@ -73,7 +73,7 @@ function onTransactionSelected(transaction: Transaction) {
 									{{ currencyFormatter.format(item.item_price_at_sale / 100) }}
 								</p>
 							</div>
-						</div>
+						</ScrollArea>
 					</div>
 				</CardContent>
 			</Card>
