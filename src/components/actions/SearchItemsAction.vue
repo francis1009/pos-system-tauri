@@ -17,6 +17,7 @@ import { useItemQuery } from "@/composables/queries/item";
 import { currencyFormatter } from "@/utils/formatter";
 import type { Item } from "@/types/item";
 import { useCart } from "@/composables/cart";
+import uFuzzy from "@leeoniya/ufuzzy";
 
 defineProps<{
 	open: boolean;
@@ -32,18 +33,26 @@ const { data: items, isLoading, error } = getAll();
 
 const filterInput = ref("");
 const debouncedFilter = useDebounce(filterInput, 200);
+const uf = new uFuzzy({});
+
+const searchItems = computed(() => {
+	if (!items.value) return [];
+	return items.value.map((item) => {
+		return item.name.toLocaleLowerCase() + item.barcode.toLowerCase();
+	});
+});
 
 const filteredItems = computed<Item[]>(() => {
-	const itemsToFilter = items.value ?? [];
-	const filterText = debouncedFilter.value.toLowerCase().trim();
-	if (!filterText) {
-		return itemsToFilter;
+	const itemsToFilter = searchItems.value ?? [];
+	const filterText = debouncedFilter.value.toLocaleLowerCase().trim();
+	if (filterText.length === 0) {
+		return items.value ?? [];
 	}
-	return itemsToFilter.filter((item) => {
-		const nameMatch = item.name.toLowerCase().includes(filterText);
-		const barcodeMatch = item.barcode?.toLowerCase().includes(filterText);
-		return nameMatch || barcodeMatch;
-	});
+	const filteredItems = uf.filter(itemsToFilter, filterText);
+	if (!filteredItems || filteredItems.length === 0) {
+		return [];
+	}
+	return filteredItems.map((index) => items.value![index]);
 });
 
 const currentPage = ref(1);
