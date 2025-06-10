@@ -48,8 +48,7 @@ const filteredItems = computed<Item[]>(() => {
 
 const currentPage = ref(1);
 const ITEMS_PER_PAGE = 9;
-const totalFilteredItems = computed(() => filteredItems.value.length);
-const totalPages = computed(() => Math.ceil(totalFilteredItems.value / ITEMS_PER_PAGE));
+const totalPages = computed(() => Math.ceil(filteredItems.value.length / ITEMS_PER_PAGE));
 
 const paginatedItems = computed<Item[]>(() => {
 	const start = (currentPage.value - 1) * ITEMS_PER_PAGE;
@@ -123,15 +122,15 @@ watch(debouncedFilter, () => {
 				>
 					<div class="text-center">
 						<Package class="w-12 h-12 mx-auto mb-4 opacity-50" />
-						<p class="text-lg mb-2">No products found</p>
-						<p class="text-sm">No products match {{ filterInput }}</p>
+						<p class="text-lg mb-2">Not found</p>
+						<p class="text-sm">No products match "{{ filterInput }}"</p>
 					</div>
 				</div>
 			</div>
 
 			<DialogFooter class="flex justify-between items-center w-full">
 				<p class="text-sm text-gray-500">
-					Showing {{ paginatedItems.length }} of {{ totalFilteredItems }} items
+					Showing {{ paginatedItems.length }} of {{ filteredItems.length }} items
 				</p>
 				<div class="flex items-center gap-2">
 					<Button
