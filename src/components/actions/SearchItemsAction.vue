@@ -124,7 +124,7 @@ watch(debouncedFilter, () => {
 					<div class="text-center">
 						<Package class="w-12 h-12 mx-auto mb-4 opacity-50" />
 						<p class="text-lg mb-2">No products found</p>
-						<p class="text-sm">No products match {{ searchQuery }}</p>
+						<p class="text-sm">No products match {{ filterInput }}</p>
 					</div>
 				</div>
 			</div>
