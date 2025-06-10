@@ -22,7 +22,7 @@ defineProps<{
 	open: boolean;
 }>();
 const emit = defineEmits<{
-	(e: "update:open", value: boolean): void;
+	"update:open": [value: boolean];
 }>();
 
 const { addToCart } = useCart();
