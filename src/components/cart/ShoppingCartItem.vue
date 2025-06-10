@@ -30,8 +30,8 @@ defineEmits<{
 		]"
 		@click="() => $emit('selectItem', item.id)"
 	>
-		<CardHeader class="w-1/3 text-left">
-			<CardTitle class="text-lg font-bold"> {{ item.name }} </CardTitle>
+		<CardHeader class="w-2/3 text-left">
+			<CardTitle class="text-lg font-bold truncate"> {{ item.name }} </CardTitle>
 			<CardDescription class="text-sm text-gray-500">
 				{{ formatter.format(item.price / 100) }} each
 			</CardDescription>

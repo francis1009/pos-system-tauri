@@ -1,7 +1,8 @@
 <script setup lang="ts">
 import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { Search, Package, History } from "lucide-vue-next";
+import { Package, History } from "lucide-vue-next";
+import SearchItemsAction from "./SearchItemsAction.vue";
 import OptionsAction from "./OptionsAction.vue";
 import CreateItemDialog from "@/components/actions/CreateItemDialog.vue";
 import ClearCartAction from "./ClearCartAction.vue";
@@ -12,14 +13,25 @@ import { useItemMutation } from "@/composables/mutations/item";
 
 const { addOpenItemToCart, addToCart, selectedItemId, editItemInCart } = useCart();
 const {
+	showSearchItemDialog,
 	showCreateItemDialog,
 	showEditItemDialog,
 	barcodeForCreation,
+	requestItemSearch,
+	completeItemSearch,
 	requestItemEditing,
 	completeItemCreation,
 	completeItemEditing,
 } = useBarcodeScanner();
 const { create, update } = useItemMutation();
+
+const handleSearchItemsDialog = (isOpen: boolean) => {
+	if (isOpen) {
+		requestItemSearch();
+	} else {
+		completeItemSearch();
+	}
+};
 
 const closeCreateItemDialog = () => {
 	completeItemCreation();
@@ -73,10 +85,7 @@ defineEmits<{
 			<CardTitle class="text-2xl font-bold"> Quick Actions </CardTitle>
 		</CardHeader>
 		<CardContent class="space-y-3">
-			<Button variant="outline" class="w-full h-12 text-left justify-start text-base">
-				<Search class="w-5 h-5 mr-2" />
-				Search Items
-			</Button>
+			<SearchItemsAction :open="showSearchItemDialog" @update:open="handleSearchItemsDialog" />
 			<Button
 				variant="outline"
 				class="w-full h-12 text-left justify-start text-base"
