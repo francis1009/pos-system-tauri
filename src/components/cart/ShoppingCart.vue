@@ -12,6 +12,7 @@ import type { BaseTransactionItem } from "@/types/transaction";
 import { useTransactionItemMutation } from "@/composables/mutations/transactionItem";
 import { currencyFormatter } from "@/utils/formatter";
 import { computed, ref } from "vue";
+import { toast } from "vue-sonner";
 
 const {
 	total,
@@ -48,7 +49,10 @@ function onItemSelect(itemId: number) {
 }
 
 async function onTransactionComplete() {
-	if (!cart.value.size) return; // TODO: sonnar no item in cart error
+	if (!cart.value.size) {
+		toast.error("Your cart is empty. Please add items before completing the transaction.");
+		return;
+	}
 	const transactionId = await create(total.value);
 	const cartItems = cartArray.value.map((item) => {
 		const ret: BaseTransactionItem = {
@@ -67,6 +71,18 @@ async function onTransactionComplete() {
 	isPrintReceiptDialogOpen.value = true;
 }
 
+function onPrintCancelled() {
+	isPrintReceiptDialogOpen.value = false;
+	toast.success("Transaction completed successfully!", {
+		description: "Would you like to print the receipt?",
+		action: {
+			label: "Print",
+			onClick: () => onPrintReceipt(),
+		},
+		duration: 7000,
+	});
+}
+
 function onPrintReceipt() {
 	isPrintReceiptDialogOpen.value = false;
 	// Logic to print the receipt
@@ -79,6 +95,7 @@ function onPrintReceipt() {
 <template>
 	<CompleteTransactionAction
 		v-model:open="isPrintReceiptDialogOpen"
+		@cancel-print="onPrintCancelled"
 		@print-receipt="onPrintReceipt"
 	/>
 	<div class="flex grow flex-col gap-4">
@@ -112,7 +129,9 @@ function onPrintReceipt() {
 			</CardContent>
 		</Card>
 		<div class="grid grid-cols-2 gap-4">
-			<Button size="lg" @click="onTransactionComplete"> Complete Transaction </Button>
+			<Button size="lg" @click="onTransactionComplete" :disabled="cart.size <= 0">
+				Complete Transaction
+			</Button>
 			<Button variant="outline" size="lg" @click="onPrintReceipt"> Print Receipt </Button>
 		</div>
 	</div>

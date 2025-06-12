@@ -6,6 +6,7 @@ import { useTransactionQuery } from "@/composables/queries/transaction";
 import { currencyFormatter, formatSqliteDateToSGT } from "@/utils/formatter";
 import { useTransactionService } from "@/composables/service/transaction";
 import type { Transaction } from "@/types/transaction";
+import { toast } from "vue-sonner";
 
 const { getTransactionByIdWithItems } = useTransactionService();
 const { getAll } = useTransactionQuery();
@@ -20,7 +21,7 @@ async function onPrintTransaction(transactionId: number) {
 	if (transactionWithItems) {
 		console.log("Transaction Details:", transactionWithItems);
 	} else {
-		console.error("Transaction not found or failed to retrieve.");
+		toast.error("Failed to retrieve transaction details.");
 	}
 }
 </script>
