@@ -11,7 +11,8 @@ import {
 } from "@/components/ui/alert-dialog";
 
 defineEmits<{
-	(e: "print-receipt"): void;
+	"print-receipt": void;
+	"cancel-print": void;
 }>();
 </script>
 <template>
@@ -25,7 +26,7 @@ defineEmits<{
 				</AlertDialogDescription>
 			</AlertDialogHeader>
 			<AlertDialogFooter>
-				<AlertDialogCancel>Cancel</AlertDialogCancel>
+				<AlertDialogCancel @click="$emit('cancel-print')">Cancel</AlertDialogCancel>
 				<AlertDialogAction @click="$emit('print-receipt')">Print</AlertDialogAction>
 			</AlertDialogFooter>
 		</AlertDialogContent>

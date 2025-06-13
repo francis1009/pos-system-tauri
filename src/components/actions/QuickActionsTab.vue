@@ -10,6 +10,7 @@ import type { CartItem, Item } from "@/types/item";
 import { useCart } from "@/composables/cart";
 import { useBarcodeScanner } from "@/composables/barcodescanner";
 import { useItemMutation } from "@/composables/mutations/item";
+import { toast } from "vue-sonner";
 
 const { addOpenItemToCart, addToCart, selectedItemId, editItemInCart } = useCart();
 const {
@@ -56,7 +57,8 @@ const handleDialogCreateItem = async (itemData: {
 		const newItem: Item = await create(itemData);
 		if (newItem) addToCart(newItem);
 	} catch (err) {
-		console.error("Error creating item in QuickActionsTab:", err);
+		const errorMsg = err instanceof Error ? err.message : (err as string);
+		toast.error("Failed to create item. Please try again.", { description: errorMsg });
 	} finally {
 		closeCreateItemDialog();
 	}
@@ -69,7 +71,8 @@ const handleDialogEditItem = async (itemData: { cartItem: CartItem; isCustom: bo
 		}
 		editItemInCart(itemData.cartItem);
 	} catch (err) {
-		console.error("Error editing item:", err);
+		const errorMsg = err instanceof Error ? err.message : (err as string);
+		toast.error("Failed to edit item. Please try again.", { description: errorMsg });
 	} finally {
 		handleOptionsDialog(false);
 	}

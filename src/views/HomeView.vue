@@ -25,11 +25,9 @@ onKeyStroke((e) => {
 	switch (e.key) {
 		case "Enter": {
 			const itemBarcode = scannedArray.value.join("");
-			console.log("Scanned Barcode:", itemBarcode);
 			scannedArray.value = [];
 			if (!itemBarcode) return;
 			const foundItem = items.value.find((item) => item.barcode === itemBarcode);
-			console.log("Found Item:", foundItem);
 			if (foundItem) {
 				addToCart(foundItem);
 			} else {
