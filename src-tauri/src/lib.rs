@@ -1,15 +1,15 @@
 mod printer;
 
-use tauri_plugin_sql::{Migration, MigrationKind};
-use crate::printer::{UsbPrinter, PRINTER_PID, PRINTER_VID};
-use printer::{print_test, printer_status};
+use crate::printer::ComPrinter;
+use printer::{get_available_ports, print_test, printer_status};
 use std::sync::{Arc, Mutex};
 use tauri::Manager;
+use tauri_plugin_sql::{Migration, MigrationKind};
 
 #[cfg_attr(mobile, tauri::mobile_entry_point)]
 pub fn run() {
     let state = Arc::new(Mutex::new(
-        UsbPrinter::build(PRINTER_VID, PRINTER_PID).expect("error while building printer"),
+        ComPrinter::build().expect("error while building printer"),
     ));
 
     tauri::Builder::default()
@@ -43,7 +43,11 @@ pub fn run() {
                 Ok(())
             }
         })
-        .invoke_handler(tauri::generate_handler![print_test, printer_status])
+        .invoke_handler(tauri::generate_handler![
+            print_test,
+            printer_status,
+            get_available_ports
+        ])
         .run(tauri::generate_context!())
         .expect("error while running tauri application");
 }

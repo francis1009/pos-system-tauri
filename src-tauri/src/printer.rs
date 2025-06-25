@@ -1,23 +1,22 @@
-use escpos::driver::{Driver, NetworkDriver, UsbDriver};
+use escpos::driver::*;
 use escpos::errors::PrinterError;
 use escpos::printer::Printer;
-use escpos::utils::{Protocol, RealTimeStatusRequest, RealTimeStatusResponse};
+use escpos::utils::*;
 use serde::Serialize;
 use std::time::Duration;
 
-pub const PRINTER_ADDR: &str = "192.168.1.248";
-pub const PRINTER_PORT: u16 = 9100;
-pub const PRINTER_VID: u16 = 0x0525;
-pub const PRINTER_PID: u16 = 0xa700;
+// Use for USB
+// pub const PRINTER_VID: u16 = 0x0483;
+// pub const PRINTER_PID: u16 = 0x5840;
 
 #[allow(dead_code)]
-pub struct UsbPrinter {
-    port: Printer<UsbDriver>,
+pub struct ComPrinter {
+    port: Printer<SerialPortDriver>,
 }
 
-impl UsbPrinter {
-    pub fn build(vid: u16, pid: u16) -> Result<Self, PrinterError> {
-        let driver = UsbDriver::open(vid, pid, Some(Duration::from_secs(2)))?;
+impl ComPrinter {
+    pub fn build() -> Result<Self, PrinterError> {
+        let driver = SerialPortDriver::open("COM5", 9_600, Some(Duration::from_secs(5)))?;
         let printer = Printer::new(driver, Protocol::default(), None);
 
         Ok(Self { port: printer })
@@ -39,7 +38,7 @@ impl From<PrinterError> for CustomError {
 
 #[tauri::command]
 pub async fn print_test() -> Result<(), CustomError> {
-    let driver = NetworkDriver::open(PRINTER_ADDR, PRINTER_PORT, Some(Duration::from_secs(1)))?;
+    let driver = SerialPortDriver::open("COM5", 9_600, Some(Duration::from_secs(5)))?;
     let mut printer = Printer::new(driver.clone(), Protocol::default(), None);
 
     printer.init()?.writeln("test")?.feed()?.print_cut()?;
@@ -49,7 +48,7 @@ pub async fn print_test() -> Result<(), CustomError> {
 
 #[tauri::command]
 pub async fn printer_status() -> Result<bool, CustomError> {
-    let driver = NetworkDriver::open(PRINTER_ADDR, PRINTER_PORT, Some(Duration::from_secs(1)))?;
+    let driver = SerialPortDriver::open("COM5", 9_600, Some(Duration::from_secs(5)))?;
     Printer::new(driver.clone(), Protocol::default(), None)
         .real_time_status(RealTimeStatusRequest::Printer)?
         .send_status()?;
@@ -64,4 +63,11 @@ pub async fn printer_status() -> Result<bool, CustomError> {
         .unwrap_or(&false);
 
     Ok(*r)
+}
+
+#[tauri::command]
+pub async fn get_available_ports() -> Vec<String> {
+    serialport::available_ports()
+        .map(|ports| ports.into_iter().map(|p| p.port_name).collect())
+        .unwrap_or_else(|_| Vec::new()) // Return an empty list on error
 }

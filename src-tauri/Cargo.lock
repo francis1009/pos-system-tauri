@@ -110,6 +110,7 @@ dependencies = [
  "log",
  "serde",
  "serde_json",
+ "serialport",
  "tauri",
  "tauri-build",
  "tauri-plugin-log",
