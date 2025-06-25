@@ -1,7 +1,7 @@
 mod printer;
 
 use crate::printer::ComPrinter;
-use printer::{get_available_ports, print_test, printer_status};
+use printer::print_test;
 use std::sync::{Arc, Mutex};
 use tauri::Manager;
 use tauri_plugin_sql::{Migration, MigrationKind};
@@ -43,11 +43,7 @@ pub fn run() {
                 Ok(())
             }
         })
-        .invoke_handler(tauri::generate_handler![
-            print_test,
-            printer_status,
-            get_available_ports
-        ])
+        .invoke_handler(tauri::generate_handler![print_test])
         .run(tauri::generate_context!())
         .expect("error while running tauri application");
 }

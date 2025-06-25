@@ -3,11 +3,9 @@ use escpos::errors::PrinterError;
 use escpos::printer::Printer;
 use escpos::utils::*;
 use serde::Serialize;
+use std::sync::{Arc, Mutex};
 use std::time::Duration;
-
-// Use for USB
-// pub const PRINTER_VID: u16 = 0x0483;
-// pub const PRINTER_PID: u16 = 0x5840;
+use tauri::State;
 
 #[allow(dead_code)]
 pub struct ComPrinter {
@@ -20,6 +18,30 @@ impl ComPrinter {
         let printer = Printer::new(driver, Protocol::default(), None);
 
         Ok(Self { port: printer })
+    }
+
+    pub fn print_receipt(&mut self) -> Result<(), PrinterError> {
+        self.port
+            .init()?
+            .smoothing(true)?
+            .bold(true)?
+            .underline(UnderlineMode::Single)?
+            .writeln("Bold underline")?
+            .justify(JustifyMode::CENTER)?
+            .reverse(true)?
+            .bold(false)?
+            .writeln("Hello world - Reverse")?
+            .feed()?
+            .justify(JustifyMode::RIGHT)?
+            .reverse(false)?
+            .underline(UnderlineMode::None)?
+            .size(2, 3)?
+            .writeln("Hello world - Normal")?
+            .writeln("")?
+            .writeln("")?
+            .print_cut()?;
+
+        Ok(())
     }
 }
 
@@ -37,37 +59,9 @@ impl From<PrinterError> for CustomError {
 }
 
 #[tauri::command]
-pub async fn print_test() -> Result<(), CustomError> {
-    let driver = SerialPortDriver::open("COM5", 9_600, Some(Duration::from_secs(5)))?;
-    let mut printer = Printer::new(driver.clone(), Protocol::default(), None);
-
-    printer.init()?.writeln("test")?.feed()?.print_cut()?;
+pub async fn print_test(state: State<'_, Arc<Mutex<ComPrinter>>>) -> Result<(), CustomError> {
+    let mut printer_instance = state.lock().unwrap();
+    printer_instance.print_receipt()?;
 
     Ok(())
-}
-
-#[tauri::command]
-pub async fn printer_status() -> Result<bool, CustomError> {
-    let driver = SerialPortDriver::open("COM5", 9_600, Some(Duration::from_secs(5)))?;
-    Printer::new(driver.clone(), Protocol::default(), None)
-        .real_time_status(RealTimeStatusRequest::Printer)?
-        .send_status()?;
-
-    let mut buf = [0; 1];
-    driver.read(&mut buf)?;
-
-    // Online/Offline status
-    let status = RealTimeStatusResponse::parse(RealTimeStatusRequest::Printer, buf[0])?;
-    let r = status
-        .get(&RealTimeStatusResponse::Online)
-        .unwrap_or(&false);
-
-    Ok(*r)
-}
-
-#[tauri::command]
-pub async fn get_available_ports() -> Vec<String> {
-    serialport::available_ports()
-        .map(|ports| ports.into_iter().map(|p| p.port_name).collect())
-        .unwrap_or_else(|_| Vec::new()) // Return an empty list on error
 }

@@ -11,7 +11,7 @@ import { useTransactionMutation } from "@/composables/mutations/transaction";
 import type { BaseTransactionItem } from "@/types/transaction";
 import { useTransactionItemMutation } from "@/composables/mutations/transactionItem";
 import { currencyFormatter } from "@/utils/formatter";
-import { print_status, print_test, fetch_ports } from "@/utils/printer";
+import { print_test } from "@/utils/printer";
 import { computed, ref } from "vue";
 import { toast } from "vue-sonner";
 
@@ -88,8 +88,6 @@ function onPrintReceipt() {
 	isPrintReceiptDialogOpen.value = false;
 	// Logic to print the receipt
 	console.log("Printing receipt...");
-	fetch_ports();
-	print_status();
 	print_test();
 	// Use an invisible element to style the receipt
 
