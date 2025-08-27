@@ -83,7 +83,7 @@ defineEmits<{
 </script>
 
 <template>
-	<Card class="h-fit w-1/4">
+	<Card class="h-fit w-full">
 		<CardHeader>
 			<CardTitle class="text-2xl font-bold"> Quick Actions </CardTitle>
 		</CardHeader>
