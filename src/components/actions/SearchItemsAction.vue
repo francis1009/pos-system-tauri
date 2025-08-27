@@ -11,7 +11,7 @@ import {
 } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import ItemCard from "@/components/search/ItemCard.vue";
+import ItemCard from "@/components/search/SearchDropdown.vue";
 import { Package, Search, ChevronLeft, ChevronRight } from "lucide-vue-next";
 import { useItemQuery } from "@/composables/queries/item";
 import { currencyFormatter } from "@/utils/formatter";
