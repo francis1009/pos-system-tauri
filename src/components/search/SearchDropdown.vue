@@ -4,7 +4,6 @@ import {
 	DropdownMenu,
 	DropdownMenuContent,
 	DropdownMenuItem,
-	DropdownMenuSeparator,
 	DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { exit } from "@tauri-apps/plugin-process";
@@ -20,10 +19,9 @@ async function handleExit() {
 			<Settings class="mx-2" />
 		</DropdownMenuTrigger>
 		<DropdownMenuContent class="mr-1">
-			<DropdownMenuItem>Import</DropdownMenuItem>
-			<DropdownMenuItem>Export</DropdownMenuItem>
-			<DropdownMenuSeparator />
-			<DropdownMenuItem variant="destructive" @click="handleExit">Exit</DropdownMenuItem>
+			<DropdownMenuItem variant="destructive" @click="handleExit" class="text-xl text-center font-bold justify-center">
+				Exit
+			</DropdownMenuItem>
 		</DropdownMenuContent>
 	</DropdownMenu>
 </template>
