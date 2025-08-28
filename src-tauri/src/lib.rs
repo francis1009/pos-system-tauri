@@ -1,16 +1,17 @@
 mod printer;
 
-use crate::printer::ComPrinter;
-use printer::print_test;
+use crate::printer::{ComPrinter, PrinterState};
+use printer::print_receipt;
 use std::sync::{Arc, Mutex};
 use tauri::Manager;
 use tauri_plugin_sql::{Migration, MigrationKind};
 
 #[cfg_attr(mobile, tauri::mobile_entry_point)]
 pub fn run() {
-    let state = Arc::new(Mutex::new(
-        ComPrinter::build().expect("error while building printer"),
-    ));
+    let state = PrinterState(Arc::new(Mutex::new(
+        ComPrinter::build("COM6")
+            .expect("Failed to connect to printer on COM5. Is it connected and on?"),
+    )));
 
     tauri::Builder::default()
         .plugin(
@@ -37,13 +38,12 @@ pub fn run() {
             Ok(())
         })
         .setup({
-            let state = state.clone();
             move |app| {
                 app.manage(state);
                 Ok(())
             }
         })
-        .invoke_handler(tauri::generate_handler![print_test])
+        .invoke_handler(tauri::generate_handler![print_receipt])
         .run(tauri::generate_context!())
         .expect("error while running tauri application");
 }

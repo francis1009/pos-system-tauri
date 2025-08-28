@@ -11,7 +11,7 @@ import { useTransactionMutation } from "@/composables/mutations/transaction";
 import type { BaseTransactionItem } from "@/types/transaction";
 import { useTransactionItemMutation } from "@/composables/mutations/transactionItem";
 import { currencyFormatter } from "@/utils/formatter";
-import { print_test } from "@/utils/printer";
+import { printReceipt } from "@/utils/printer";
 import { computed, ref } from "vue";
 import { toast } from "vue-sonner";
 
@@ -19,6 +19,8 @@ const {
 	total,
 	cart,
 	previousCart,
+	prevTransactionId,
+	prevTotal,
 	selectedItemId,
 	selectItem,
 	updateItemQuantity,
@@ -86,12 +88,8 @@ function onPrintCancelled() {
 
 function onPrintReceipt() {
 	isPrintReceiptDialogOpen.value = false;
-	// Logic to print the receipt
 	console.log("Printing receipt...");
-	print_test();
-	// Use an invisible element to style the receipt
-
-	console.log(previousCart.value);
+	printReceipt(previousCart.value, prevTransactionId.value, prevTotal.value);
 }
 </script>
 <template>

@@ -4,6 +4,7 @@ import { readonly, ref } from "vue";
 const cart = ref<Map<number, CartItem>>(new Map());
 const previousCart = ref<Map<number, CartItem>>(new Map());
 const prevTransactionId = ref<number | null>(null);
+const prevTotal = ref(0);
 const total = ref(0);
 const selectedItemId = ref<number | null>(null);
 const selectedItem = ref<CartItem | undefined>(undefined);
@@ -52,6 +53,7 @@ function useCart() {
 	function storePreviousCart(transactionId: number) {
 		previousCart.value = new Map(cart.value);
 		prevTransactionId.value = transactionId;
+		prevTotal.value = total.value;
 	}
 
 	function clearCart() {
@@ -86,6 +88,7 @@ function useCart() {
 		cart: readonly(cart),
 		previousCart: readonly(previousCart),
 		prevTransactionId: readonly(prevTransactionId),
+		prevTotal: readonly(prevTotal),
 		total: readonly(total),
 		selectedItemId,
 		selectedItem: readonly(selectedItem),
