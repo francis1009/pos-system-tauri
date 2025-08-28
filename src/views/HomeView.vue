@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import { ref } from "vue";
 import ShoppingCart from "@/components/cart/ShoppingCart.vue";
+import SearchDropdown from "@/components/search/SearchDropdown.vue";
 import QuickActionsTab from "@/components/actions/QuickActionsTab.vue";
 import DateTimeDisplay from "@/components/DateTimeDisplay.vue";
 import TransactionListDialog from "@/components/transaction/TransactionListDialog.vue";
@@ -75,12 +76,19 @@ onKeyStroke((e) => {
 </script>
 
 <template>
-	<main class="flex min-h-screen gap-4 justify-center p-6 text-center">
-		<ShoppingCart />
-		<QuickActionsTab @open-transactions-dialog="isTransactionListDialogOpen = true" />
+	<main class="flex min-h-screen items-start gap-4 justify-center p-6">
+		<div class="flex-grow">
+			<ShoppingCart />
+		</div>
+		<div class="w-60 space-y-2">
+			<div class="flex justify-end">
+				<SearchDropdown />
+			</div>
+			<QuickActionsTab @open-transactions-dialog="isTransactionListDialogOpen = true" />
+		</div>
 		<TransactionListDialog
 			:open="isTransactionListDialogOpen"
-			@update:open="(value) => (isTransactionListDialogOpen = value)"
+			@update:open="(value: boolean) => (isTransactionListDialogOpen = value)"
 		/>
 	</main>
 	<footer>

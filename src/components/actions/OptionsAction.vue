@@ -12,7 +12,7 @@ import {
 } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { Settings } from "lucide-vue-next";
+import { Pencil } from "lucide-vue-next";
 import { useCart } from "@/composables/cart";
 import type { CartItem } from "@/types/item";
 
@@ -86,7 +86,7 @@ const handleEditItem = () => {
 				:disabled="selectedItem === undefined"
 				@click="if (selectedItem) emit('update:open', true);"
 			>
-				<Settings class="w-5 h-5 mr-2" />
+				<Pencil class="w-5 h-5 mr-2" />
 				Options
 			</Button>
 		</DialogTrigger>

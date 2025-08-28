@@ -26,3 +26,4 @@ tauri-plugin-log = "2.0.0-rc"
 tauri-plugin-sql = { version = "2", features = ["sqlite"] }
 escpos = { version = "0.15.2", features = ["full"] }
 chrono = "0.4.41"
+tauri-plugin-process = "2"
