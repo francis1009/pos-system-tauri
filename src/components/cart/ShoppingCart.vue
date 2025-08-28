@@ -89,7 +89,19 @@ function onPrintCancelled() {
 function onPrintReceipt() {
 	isPrintReceiptDialogOpen.value = false;
 	console.log("Printing receipt...");
-	printReceipt(previousCart.value, prevTransactionId.value, prevTotal.value);
+	if (!prevTransactionId.value) {
+		console.error("No transaction ID");
+		return;
+	}
+	printReceipt({
+		transaction_id: prevTransactionId.value,
+		total: prevTotal.value,
+		items: Array.from(previousCart.value.values()).map((cartItem) => ({
+			item_name: cartItem.name,
+			quantity: cartItem.quantity,
+			item_price_at_sale: cartItem.price,
+		})),
+	});
 }
 </script>
 <template>

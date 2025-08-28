@@ -1,5 +1,4 @@
 import { invoke } from "@tauri-apps/api/core";
-import type { CartItem } from "@/types/item";
 import { toast } from "vue-sonner";
 
 interface ReceiptData {
@@ -14,24 +13,16 @@ interface ReceiptItem {
 	item_price_at_sale: number;
 }
 
-export async function printReceipt(
-	previousCart: Map<number, CartItem>,
-	prevTransactionId: number,
-	prevTotal: number,
-) {
-	if (!previousCart || previousCart.size === 0) {
-		console.error("Cannot print receipt: previous cart data is empty.");
+export async function printReceipt(receipt: ReceiptData) {
+	if (!receipt || !receipt.items || receipt.items.length === 0) {
+		toast.error("Cannot print receipt: Data is invalid or has no items.");
 		return;
 	}
 
 	const payload: ReceiptData = {
-		transaction_id: prevTransactionId,
-		total: prevTotal,
-		items: Array.from(previousCart.values()).map((cartItem) => ({
-			item_name: cartItem.name,
-			quantity: cartItem.quantity,
-			item_price_at_sale: cartItem.price,
-		})),
+		transaction_id: receipt.transaction_id,
+		total: receipt.total,
+		items: receipt.items,
 	};
 
 	try {

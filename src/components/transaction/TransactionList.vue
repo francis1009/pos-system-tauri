@@ -7,6 +7,7 @@ import { currencyFormatter, formatSqliteDateToSGT } from "@/utils/formatter";
 import { useTransactionService } from "@/composables/service/transaction";
 import type { Transaction } from "@/types/transaction";
 import { toast } from "vue-sonner";
+import { printReceipt } from "@/utils/printer";
 
 const { getTransactionByIdWithItems } = useTransactionService();
 const { getAll } = useTransactionQuery();
@@ -19,7 +20,11 @@ defineEmits<{
 async function onPrintTransaction(transactionId: number) {
 	const transactionWithItems = await getTransactionByIdWithItems(transactionId);
 	if (transactionWithItems) {
-		console.log("Transaction Details:", transactionWithItems);
+		printReceipt({
+			transaction_id: transactionWithItems.id,
+			total: transactionWithItems.total_amount,
+			items: transactionWithItems.items,
+		});
 	} else {
 		toast.error("Failed to retrieve transaction details.");
 	}
