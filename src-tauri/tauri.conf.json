@@ -1,22 +1,22 @@
 {
 	"$schema": "../node_modules/@tauri-apps/cli/config.schema.json",
-	"productName": "pos-system",
-	"version": "0.1.0",
-	"identifier": "com.tauri.dev",
+	"productName": "Cabalen Groceries POS System",
+	"version": "1.0.0",
+	"identifier": "com.francis1009.pos-system",
 	"build": {
 		"frontendDist": "../dist",
 		"devUrl": "http://localhost:5173",
 		"beforeDevCommand": "bun dev",
-		"beforeBuildCommand": "bun build"
+		"beforeBuildCommand": "bun run build"
 	},
 	"app": {
 		"windows": [
 			{
-				"title": "pos-system",
+				"title": "Cabalen Groceries POS System",
 				"width": 1024,
 				"height": 768,
 				"resizable": false,
-				"fullscreen": false
+				"fullscreen": true
 			}
 		],
 		"security": {

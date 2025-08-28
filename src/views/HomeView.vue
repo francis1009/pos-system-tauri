@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { ref } from "vue";
 import ShoppingCart from "@/components/cart/ShoppingCart.vue";
-import SearchDropdown from "@/components/search/SearchDropdown.vue";
+import SettingsDropdown from "@/components/settings/SettingsDropdown.vue";
 import QuickActionsTab from "@/components/actions/QuickActionsTab.vue";
 import DateTimeDisplay from "@/components/DateTimeDisplay.vue";
 import TransactionListDialog from "@/components/transaction/TransactionListDialog.vue";
@@ -82,7 +82,7 @@ onKeyStroke((e) => {
 		</div>
 		<div class="w-60 space-y-2">
 			<div class="flex justify-end">
-				<SearchDropdown />
+				<SettingsDropdown />
 			</div>
 			<QuickActionsTab @open-transactions-dialog="isTransactionListDialogOpen = true" />
 		</div>

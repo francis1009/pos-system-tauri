@@ -30,6 +30,10 @@ export async function printReceipt(receipt: ReceiptData) {
 		console.log("Receipt sent to printer successfully.");
 	} catch (error) {
 		console.error("Printer error:", error);
-		toast.error(`Printer Error: ${error.message}`);
+		let errorMessage = "Failed to do something exceptional";
+		if (error instanceof Error) {
+			errorMessage = error.message;
+		}
+		toast.error(`Printer Error: ${errorMessage}`);
 	}
 }
