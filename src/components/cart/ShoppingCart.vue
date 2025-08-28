@@ -141,8 +141,8 @@ function onPrintReceipt() {
 			</CardContent>
 		</Card>
 		<div class="grid grid-cols-2 gap-4">
-			<Button size="lg" @click="onTransactionComplete" :disabled="cart.size <= 0">
-				Complete Transaction
+			<Button size="lg" class="font-bold" @click="onTransactionComplete" :disabled="cart.size <= 0">
+				CASH
 			</Button>
 			<Button variant="outline" size="lg" @click="onPrintReceipt"> Print Receipt </Button>
 		</div>
