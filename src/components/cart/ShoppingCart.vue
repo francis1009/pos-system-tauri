@@ -11,6 +11,7 @@ import { useTransactionMutation } from "@/composables/mutations/transaction";
 import type { BaseTransactionItem } from "@/types/transaction";
 import { useTransactionItemMutation } from "@/composables/mutations/transactionItem";
 import { currencyFormatter } from "@/utils/formatter";
+import { printReceipt } from "@/utils/printer";
 import { computed, ref } from "vue";
 import { toast } from "vue-sonner";
 
@@ -18,6 +19,8 @@ const {
 	total,
 	cart,
 	previousCart,
+	prevTransactionId,
+	prevTotal,
 	selectedItemId,
 	selectItem,
 	updateItemQuantity,
@@ -85,11 +88,20 @@ function onPrintCancelled() {
 
 function onPrintReceipt() {
 	isPrintReceiptDialogOpen.value = false;
-	// Logic to print the receipt
 	console.log("Printing receipt...");
-	// Use an invisible element to style the receipt
-
-	console.log(previousCart.value);
+	if (!prevTransactionId.value) {
+		console.error("No transaction ID");
+		return;
+	}
+	printReceipt({
+		transaction_id: prevTransactionId.value,
+		total: prevTotal.value,
+		items: Array.from(previousCart.value.values()).map((cartItem) => ({
+			item_name: cartItem.name,
+			quantity: cartItem.quantity,
+			item_price_at_sale: cartItem.price,
+		})),
+	});
 }
 </script>
 <template>
@@ -129,8 +141,8 @@ function onPrintReceipt() {
 			</CardContent>
 		</Card>
 		<div class="grid grid-cols-2 gap-4">
-			<Button size="lg" @click="onTransactionComplete" :disabled="cart.size <= 0">
-				Complete Transaction
+			<Button size="lg" class="font-bold" @click="onTransactionComplete" :disabled="cart.size <= 0">
+				CASH
 			</Button>
 			<Button variant="outline" size="lg" @click="onPrintReceipt"> Print Receipt </Button>
 		</div>
