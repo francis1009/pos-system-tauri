@@ -21,16 +21,19 @@ pub struct ReceiptData {
     total: u32,
 }
 
-pub struct PrinterState(pub Arc<Mutex<ComPrinter>>);
+pub struct PrinterState(pub Arc<Mutex<UsbPrinter>>);
+
+pub const PRINTER_VID: u16 = 0x0483;
+pub const PRINTER_PID: u16 = 0x5840;
 
 #[allow(dead_code)]
-pub struct ComPrinter {
-    port: Printer<SerialPortDriver>,
+pub struct UsbPrinter {
+    port: Printer<UsbDriver>,
 }
 
-impl ComPrinter {
-    pub fn build(port_name: &str) -> Result<Self, PrinterError> {
-        let driver = SerialPortDriver::open(port_name, 9_600, Some(Duration::from_secs(10)))?;
+impl UsbPrinter {
+    pub fn build(vid: u16, pid: u16) -> Result<Self, PrinterError> {
+        let driver = UsbDriver::open(vid, pid, Some(Duration::from_secs(10)), None)?;
         let printer = Printer::new(driver, Protocol::default(), None);
         Ok(Self { port: printer })
     }

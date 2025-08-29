@@ -21,7 +21,7 @@ const useItemMutation = () => {
 		onSuccess: (data) => {
 			queryClient.setQueryData(["items"], (oldData: Array<Item> | undefined) => {
 				if (oldData) {
-					oldData.map((item) => (item.id === data.id ? data : item));
+					return oldData.map((item) => (item.id === data.id ? data : item));
 				}
 			});
 			queryClient.setQueryData(["item", data.barcode], (oldData: Item | undefined) =>

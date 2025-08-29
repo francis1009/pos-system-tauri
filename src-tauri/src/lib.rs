@@ -1,6 +1,6 @@
 mod printer;
 
-use crate::printer::{ComPrinter, PrinterState};
+use crate::printer::{PrinterState, UsbPrinter, PRINTER_PID, PRINTER_VID};
 use printer::print_receipt;
 use std::sync::{Arc, Mutex};
 use tauri::Manager;
@@ -9,8 +9,8 @@ use tauri_plugin_sql::{Migration, MigrationKind};
 #[cfg_attr(mobile, tauri::mobile_entry_point)]
 pub fn run() {
     let state = PrinterState(Arc::new(Mutex::new(
-        ComPrinter::build("COM6")
-            .expect("Failed to connect to printer on COM5. Is it connected and on?"),
+        UsbPrinter::build(PRINTER_VID, PRINTER_PID)
+            .expect("Failed to connect to printer on USB. Is it connected and on?"),
     )));
 
     tauri::Builder::default()
