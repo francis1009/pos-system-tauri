@@ -1,7 +1,7 @@
 {
 	"$schema": "../node_modules/@tauri-apps/cli/config.schema.json",
 	"productName": "Cabalen Groceries POS System",
-	"version": "1.0.0",
+	"version": "1.0.1",
 	"identifier": "com.francis1009.pos-system",
 	"build": {
 		"frontendDist": "../dist",

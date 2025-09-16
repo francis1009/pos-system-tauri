@@ -12,7 +12,7 @@ import type { BaseTransactionItem } from "@/types/transaction";
 import { useTransactionItemMutation } from "@/composables/mutations/transactionItem";
 import { currencyFormatter } from "@/utils/formatter";
 import { printReceipt } from "@/utils/printer";
-import { computed, ref } from "vue";
+import { computed, ref, onUpdated, nextTick } from "vue";
 import { toast } from "vue-sonner";
 
 const {
@@ -30,6 +30,18 @@ const {
 } = useCart();
 const { create } = useTransactionMutation();
 const { batchCreate } = useTransactionItemMutation();
+
+const scrollSentinel = ref<HTMLElement | null>(null);
+
+onUpdated(() => {
+	nextTick(() => {
+		if (!scrollSentinel.value) return;
+		scrollSentinel.value.scrollIntoView({
+			behavior: "smooth",
+			block: "end",
+		});
+	});
+});
 
 const formattedTotal = computed(() => currencyFormatter.format(total.value / 100));
 
@@ -136,6 +148,11 @@ function onPrintReceipt() {
 							@update-quantity="onQuantityChange"
 							@select-item="onItemSelect"
 						/>
+						<div
+							ref="scrollSentinel"
+							class="h-px w-full pointer-events-none aria-hidden"
+							aria-hidden="true"
+						></div>
 					</div>
 				</ScrollArea>
 			</CardContent>
